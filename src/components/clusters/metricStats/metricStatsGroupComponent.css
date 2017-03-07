@@ -1,0 +1,12 @@
+.metric-stat-wrapper {
+    display: block;
+}
+
+.metric-stat-wrapper .inline {
+    display: inline-block;
+    margin-right: 1.5em;
+}
+
+.metric-stat-wrapper .clustername {
+    font-weight: 500;
+}

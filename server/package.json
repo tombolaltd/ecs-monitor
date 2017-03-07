@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Acts primarily as the identity server for the ECS dashboard",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marc Costello <marc.costello@tombola.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.1",
+    "aws-sdk": "^2.18.0"
+  }
+}

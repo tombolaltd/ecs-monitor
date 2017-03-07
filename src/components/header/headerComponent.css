@@ -1,0 +1,15 @@
+.nav-wrapper {
+    padding:0 2em;
+}
+
+.nav-wrapper .brand-logo {
+    height:100%;
+}
+
+.nav-wrapper .logo-img {
+    width:1em;
+    display:inline-block;
+    height:64px;
+    line-height:64px;
+    margin-right:0.15em;
+}

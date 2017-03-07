@@ -1,0 +1,20 @@
+.metricstat .number {
+    font-size:5em;
+    transition: color 3s;
+}
+
+.metricstat .number.danger {
+    color:#c62828;
+}
+
+.metricstat .number.optimal {
+    color:green;
+}
+
+.metricstat .number.centric {
+    color:black;
+}
+
+.metricstat .title {
+    display:block;
+}

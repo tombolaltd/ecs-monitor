@@ -1,0 +1,16 @@
+.page-details .active-spinner {
+    margin-right:1em;
+}
+
+.page-details .header {
+    margin:0.1em 0;
+}
+
+.page-details .fade-in {
+    animation: fadeIn 3s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity:0; }
+    to { opacity:1; }
+}

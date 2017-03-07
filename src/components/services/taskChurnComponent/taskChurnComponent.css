@@ -1,0 +1,20 @@
+.no-churns-icon, .healthy {
+    color:green;
+}
+
+.unhealthy {
+    color: red;
+}
+
+.service-task-churn dl {
+    margin: 0;
+}
+
+.churn-entry dd {
+    display:inline-block;
+    margin-left:1em;
+}
+
+.tooltipped {
+    cursor:pointer;
+}

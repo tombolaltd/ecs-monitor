@@ -1,0 +1,16 @@
+body {
+  background:#fcfcfc;
+}
+
+.nav-and-body-wrapper {
+  display:flex;
+}
+
+.page-body {
+  flex: 2;
+  padding:0 2em;
+}
+
+.card-header {
+  font-size:1.25em;
+}
