@@ -1,0 +1,26 @@
+.service-overview-entry .service-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.service-overview-entry .thumb_up {
+    color: green;
+}
+
+.service-overview-entry .warning {
+    color:darkorange;
+}
+
+.service-overview-entry .count {
+    font-size:1.25em;
+    text-align: right;
+}
+
+.service-overview-table th {
+    padding:1em 0.25em;
+}
+
+.service-overview-entry td {
+    padding: 0.25em;
+}
