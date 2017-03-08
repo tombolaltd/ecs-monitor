@@ -14,3 +14,16 @@ body {
 .card-header {
   font-size:1.25em;
 }
+
+.slimmer-table .count {
+    font-size:1.25em;
+    text-align: right;
+}
+
+.slimmer-table th {
+    padding:1em 0.25em;
+}
+
+.slimmer-table td {
+    padding: 0.25em;
+}

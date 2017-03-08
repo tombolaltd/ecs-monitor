@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { aggregatedServiceDeploymentStream$ } from '../../dataStreams/serviceStreams';
+import { aggregatedServiceDeploymentStream$ } from '../../../dataStreams/serviceStreams';
+import './deploymentsComponent.css';
 
 function formatTaskDefinitionString(taskDefinition) {
     let lastIndexOfSlash = taskDefinition.lastIndexOf('/');
@@ -9,10 +10,12 @@ function formatTaskDefinitionString(taskDefinition) {
 
 function buildListItem(deployment) {
     return (
-        <li className="entry" key={deployment.id}>
-            {moment(deployment.createdAt).format('ddd Do MMM, h:mm:ss a')} -
-            dc::{deployment.desiredCount} - td::{formatTaskDefinitionString(deployment.taskDefinition)}
-        </li>
+        <tr key={deployment.id}>
+            <td>{moment(deployment.createdAt).fromNow()}</td>
+            <td className="count">{deployment.desiredCount}</td>
+            <td className="count">{deployment.pendingCount}</td>
+            <td>{formatTaskDefinitionString(deployment.taskDefinition)}</td>
+        </tr>
     );
 }
 
@@ -40,22 +43,40 @@ class Deployments extends Component {
     
     renderNoDeployments() {
         return (
-            <li>There are no deployments to show</li>
+            <p>There are no deployments to show</p>
+        );
+    }
+
+    renderTable() {
+        const tableBody = this.state.deployments.map(buildListItem);
+        return (
+            <table className="slimmer-table deployments-table striped">
+                <thead>
+                    <tr>
+                        <th>When</th>
+                        <th>Desired</th>
+                        <th>Pending</th>
+                        <th>Task Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tableBody}
+                </tbody>
+            </table>
         );
     }
 
     render() {
-        const body = this.state.deployments.length === 0
+        const content = this.state.deployments.length === 0
             ? this.renderNoDeployments()
-            : this.state.deployments.map(buildListItem);
+            : this.renderTable();
+
         return (
             <section className="service-deployments">
                 <div className="card-panel">
                     <strong className="card-header">Deployments</strong>
                     <div className="divider"></div>
-                    <ul>
-                        {body}
-                    </ul>
+                    {content}
                 </div>
             </section>
         );

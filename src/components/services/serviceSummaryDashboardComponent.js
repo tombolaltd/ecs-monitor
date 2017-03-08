@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PageDescription from '../pageDescription/pageDescriptionComponent';
 import ServiceTaskOverview from './serviceTaskOverviewComponent/serviceTaskOverviewComponent';
-import Deployments from './deploymentsComponent';
+import Deployments from './deploymentsComponent/deploymentsComponent';
 import AggregatedServiceEvents from './aggregatedEventsComponent';
 import TaskChurn from './taskChurnComponent/taskChurnComponent';
 //import MetricAlerts from './metricAlertsComponent';

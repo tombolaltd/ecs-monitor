@@ -40,19 +40,21 @@ class ServiceTaskOverview extends Component {
 
     renderNoServices() {
         return (
-            <li>There are no services to show</li>
+            <p>There are no services to show</p>
         )
     }
 
     renderTable() {
         const tableBody = this.state.services.map(buildListItem);
         return (
-            <table className="service-overview-table striped responsive-table">
+            <table className="slimmer-table service-overview-table striped">
                 <thead>
-                    <th>Service Name</th>
-                    <th>Desired</th>
-                    <th>Running</th>
-                    <th></th>
+                    <tr>
+                        <th>Service Name</th>
+                        <th>Desired</th>
+                        <th>Running</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
                     {tableBody}
