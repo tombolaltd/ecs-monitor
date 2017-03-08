@@ -5,3 +5,10 @@
 .service-overview-entry .warning {
     color:darkorange;
 }
+
+.service-overview-entry .service-name {
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 2em;
+    text-overflow: ellipsis;
+}
