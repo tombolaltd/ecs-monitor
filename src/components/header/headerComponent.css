@@ -1,3 +1,7 @@
+.fullscreen .header-container {
+    display:none;
+}
+
 .nav-wrapper {
     padding:0 2em;
 }

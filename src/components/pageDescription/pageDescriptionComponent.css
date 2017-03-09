@@ -1,3 +1,7 @@
+.fullscreen .page-details {
+    padding:0.75em;
+}
+
 .page-details .active-spinner {
     margin-right:1em;
 }
