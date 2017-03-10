@@ -1,0 +1,7 @@
+VpcId=vpc-70226d15
+ClusterName=DEV-ECS
+DesiredCount=1
+ALBListenerArn=arn:aws:elasticloadbalancing:eu-west-1:075458894664:listener/app/DEVEU-Inter-1L8LU8LVR658S/b35451b9f52ec2f2/38f83e5a819f354a
+ECSServiceRole=aws-ecs-ec2-role
+MinimumDeploymentConfigurationTarget=0
+MaximumDeploymentConfigurationTarget=200

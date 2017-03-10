@@ -1,0 +1,7 @@
+VpcId=vpc-959fcdf0
+ClusterName=default
+DesiredCount=1
+ALBListenerArn=arn:aws:elasticloadbalancing:eu-west-1:630702119774:listener/app/ECS-DefaultCluster/624f9fe2ba8ade80/d3b388056890cc37
+ECSServiceRole=ecsServiceRole
+MinimumDeploymentConfigurationTarget=0
+MaximumDeploymentConfigurationTarget=200

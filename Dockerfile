@@ -4,10 +4,10 @@ COPY . /app
 
 WORKDIR /app
 
-RUN npm install --production \
+RUN npm install \
     && npm run build \
     && cd server \
-    && npm install --production
+    && npm install
 
 ENV NODE_ENV production
 
