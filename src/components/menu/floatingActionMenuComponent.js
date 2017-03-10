@@ -19,7 +19,7 @@ class FloatingActionMenu extends Component {
                 </a>
                 <ul>
                     <li>
-                        <a className="btn-floating orange" onClick={this.handleFullScreenClick}>
+                        <a className="btn-floating blue lighten-1" onClick={this.handleFullScreenClick}>
                             <i className="material-icons">aspect_ratio</i>
                         </a>
                     </li>
