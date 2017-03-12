@@ -2,9 +2,9 @@
     padding-top: 1em;
 }
 
-.logs-dashboard-container .results {
+/*.logs-dashboard-container .results {
     display:flex;
-}
+}*/
 
 .logs-dashboard-container .log-stream-entry:hover {
     text-decoration: underline;

@@ -16,7 +16,7 @@ class LogsDashboard extends Component {
         // bind functions
         this.updateLogsState = this.updateLogsState.bind(this);
         this.updateLogResponseState = this.updateLogResponseState.bind(this);
-        this.handleGetLogsClick = this.handleGetLogsClick.bind(this);
+        this.handleGetRecentStreamsClick = this.handleGetRecentStreamsClick.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.renderLogEntry = this.renderLogEntry.bind(this);
     }
@@ -39,12 +39,17 @@ class LogsDashboard extends Component {
         });
     }
 
-    handleGetLogsClick() {
+    handleGetRecentStreamsClick() {
+        progressBarEvent$.next(new Event(this, 'start'));
         getLogs().then(this.updateLogsState);
     }
 
     handleSearch(e) {
         e.preventDefault();
+        
+        const fieldValue = this.refs['logSearch'].value;
+        if (!fieldValue) return;
+
         progressBarEvent$.next(new Event(this, 'start'));
         getLogs(this.refs['logSearch'].value).then(this.updateLogsState);
     }
@@ -73,19 +78,22 @@ class LogsDashboard extends Component {
         return (
             <div className="logs-dashboard-container">
                 <header>
-                    <button onClick={this.handleGetLogsClick} className="waves-effect waves-light btn">Recent 50 streams</button>
+                    <button onClick={this.handleGetRecentStreamsClick} className="waves-effect waves-light btn">
+                        <i className="material-icons left">view_list</i>
+                        Recent 50 streams
+                        </button>
                     <form onSubmit={this.handleSearch}>
                         <div className="input-field">
-                            <input id="logSearch" ref="logSearch" name="logSearch" type="text" className="log-search-input" />
+                            <input id="logSearch" ref="logSearch" name="logSearch" type="text" className="log-search-input validate" />
                             <label htmlFor="logSearch">Search</label>
                         </div>
                     </form>
                 </header>
-                <div className="results">
-                    <ul>
+                <div className="results row">
+                    <ul className="col s3">
                         {list}
                     </ul>
-                    <section className="log-viewer-container">
+                    <section className="log-viewer-container col s9">
                         <LogViewer logStream={this.state.logStreamResponse} logStreamName={this.state.activeLogStreamName} />
                     </section>
                 </div>

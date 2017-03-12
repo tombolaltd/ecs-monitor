@@ -1,5 +1,4 @@
 import AWS from 'aws-sdk';
-import config from '../config';
 import awsRequest from '../awsRequest';
 
 function describeLogStreamsRequest(prefix, nextToken) {

@@ -3,3 +3,7 @@
     background: #efefef;
     font-family: Courier New, Courier, monospace;
 }
+
+.log-viewer .log-event-item .timestamp {
+    font-size: 0.88em;
+}

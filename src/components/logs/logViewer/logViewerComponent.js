@@ -13,7 +13,7 @@ class LogViewer extends Component {
     mapLogToEventListItem(log, i) {
         return (
             <li className="log-event-item" key={log.timestamp + i}>
-                {moment(log.timestamp).format()} :: {log.message}
+                <em className="timestamp">{moment(log.timestamp).format()}</em> :: {log.message}
             </li>
         );
     }
@@ -28,7 +28,8 @@ class LogViewer extends Component {
         const eventList = this.props.logStream.events.map(this.mapLogToEventListItem);
         return (
             <div className="log-viewer">
-                <div><strong>{this.props.logStreamName || ''}</strong></div>
+                <strong>{this.props.logStreamName || ''}</strong>
+                <hr />
                 <ul className="log-event-list">
                     {eventList}
                 </ul>
@@ -48,7 +49,8 @@ LogViewer.propTypes = {
         events: PropTypes.array,
         nextForwardToken: PropTypes.string,
         nextBackwardToken: PropTypes.string
-    })
+    }),
+    logStreamName: PropTypes.string
 };
 
 
