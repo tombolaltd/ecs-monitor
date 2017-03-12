@@ -27,3 +27,14 @@ body {
 .slimmer-table td {
     padding: 0.25em;
 }
+
+/*
+  NProgress overrides
+*/
+#nprogress .bar {
+  background:darkorange;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px darkorange, 0 0 5px darkorange;
+}

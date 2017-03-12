@@ -3,7 +3,12 @@ import Header from './components/header/headerComponent';
 import Footer from './components/footer/footerComponent';
 import FloatingActionMenu from './components/menu/floatingActionMenuComponent';
 import { fullScreenEvent$ } from './pubsub/eventStreams';
+import { attachAllPageEventHandlers, detachAllPageEventHandlers } from './pubsub/eventHandlers';
+
+// css
+import 'nprogress/nprogress.css';
 import './app.css';
+
 
 class App extends Component {
   constructor(props) {
@@ -14,11 +19,13 @@ class App extends Component {
   }
   
   componentDidMount() {
-    fullScreenEvent$.subscribe(this.handleFullScreenRequestEvent.bind(this))
+    fullScreenEvent$.subscribe(this.handleFullScreenRequestEvent.bind(this));
+    attachAllPageEventHandlers();
   }
 
   componentWillUnmount() {
     fullScreenEvent$.unsubscribe();
+    detachAllPageEventHandlers();
   }
 
   handleFullScreenRequestEvent() {

@@ -4,7 +4,7 @@ import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
 import App from './app';
 import ServicesDashboard from './components/services/serviceSummaryDashboardComponent';
 import ClustersDashboard from './components/clusters/clusterSummaryDashboardComponent';
-import LogsDashboard from './components/logs/logsDashboardComponent';
+import LogsDashboard from './components/logs/logsDashboard/logsDashboardComponent';
 import './index.css';
 
 ReactDOM.render((

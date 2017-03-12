@@ -9,3 +9,4 @@ export class Event {
 }
 
 export const fullScreenEvent$ = new Subject();
+export const progressBarEvent$ = new Subject();

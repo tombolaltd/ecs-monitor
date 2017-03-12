@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import ActiveSpinner from '../spinners/activeSpinnerComponent';
+import ActiveSpinner from '../loading/activeSpinnerComponent';
 import './pageDescriptionComponent.css';
 
 class PageDescription extends Component {
