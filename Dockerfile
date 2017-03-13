@@ -5,9 +5,10 @@ COPY . /app
 WORKDIR /app
 
 RUN npm install \
-    && npm run build \
     && cd server \
     && npm install
+    
+RUN npm run build
 
 ENV NODE_ENV production
 
