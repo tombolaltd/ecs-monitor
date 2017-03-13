@@ -9,6 +9,9 @@ import LogsDashboard from './components/logs/logsDashboard/logsDashboardComponen
 import './index.css';
 
 function removeTrailingSlash(str) {
+  if (str === '/') {
+    return str;
+  }
   return str.replace(/\/+$/, "");
 }
 
