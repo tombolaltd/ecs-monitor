@@ -42,7 +42,7 @@ function getAwsConfig() {
     });
 }
 
-export default {   
+export default {
     CLUSTER_ARN_REFRESH_INTERVAL: 10, // minutes
     CLUSTER_REFRESH_INTERVAL: 10, // seconds
     SERVICE_ARN_REFRESH_INTERVAL: 60, // seconds
