@@ -5,5 +5,5 @@ module.exports = {
     * 
     * Ensure to include a trailing slash /
     */
-    MOUNTING_PATH: '/ecs-monitor/'
+    MOUNTING_PATH: '/'
 };
