@@ -1,12 +1,20 @@
 FROM mhart/alpine-node:7.7.1
 
+COPY package.json /tmp/package.json
+COPY server/package.json /tmp/server/package.json
+
+RUN cd /tmp \
+    && npm install \
+    && cd server \
+    && npm install
+
+RUN mkdir -p /app \
+    && cp -a /tmp/node_modules /app/ \
+    && cp -a /tmp/server/node_modules /app/server/
+
 COPY . /app
 
 WORKDIR /app
-
-RUN npm install \
-    && cd server \
-    && npm install
     
 RUN npm run build
 
