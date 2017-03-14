@@ -23,8 +23,7 @@ const sts = new AWS.STS({
     secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
-app.use(express.static(rootPath));
-
+sub.use(express.static(rootPath));
 
 sub.post('/authenticate', (req, res) => {
     return sts.getSessionToken().promise().then(res.json.bind(res));
