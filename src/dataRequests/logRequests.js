@@ -7,7 +7,7 @@ function describeLogStreamsRequest(prefix, nextToken) {
         // http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DescribeLogStreams.html
         return logs.describeLogStreams({
             logGroupName: 'ecs', // todo: pass this in...
-            descending: true,
+            descending: false,
             nextToken: nextToken,
             logStreamNamePrefix: prefix
             // "descending": boolean,

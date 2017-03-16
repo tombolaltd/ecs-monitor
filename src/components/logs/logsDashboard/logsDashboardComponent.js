@@ -70,7 +70,9 @@ class LogsDashboard extends Component {
     
     renderLogViewer() {
         return (
-            <LogViewer logStream={this.state.logStreamResponse} logStreamName={this.state.activeLogStreamName} />
+            <LogViewer 
+                logStream={this.state.logStreamResponse}
+                logStreamName={this.state.activeLogStreamName} />
         );
     }
 

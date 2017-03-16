@@ -11,25 +11,28 @@ class State {
         
         this.logCollection = logCollection
         this.logStreamName = logStreamName;
-        this.nextToken = nextToken;
+        this.nextToken = nextToken || '';
     }
 }
 
 class LogViewer extends Component {
     constructor(props) {
         super(props);
-        this.state = new State([props.logStream.events], props.logStreamName, props.nextForwardToken);
+        this.state = new State(
+            [ props.logStream.events ],
+            props.logStreamName,
+            props.logStream.nextForwardToken
+        );
         
         // bind functions
-        this.mapLogToEventListItem = this.mapLogToEventListItem.bind(this);
+        this.mapLogCollectionToListBodyComponents = this.mapLogCollectionToListBodyComponents.bind(this);
         this.loadMoreButtonClickHandler = this.loadMoreButtonClickHandler.bind(this);
     }
 
-    mapLogToEventListItem(log, i) {
+    mapLogCollectionToListBodyComponents(events, i) {
+        // todo - we should support the case where there is no events
         return (
-            <li className="log-event-item" key={log.timestamp + i}>
-                <em className="timestamp">{moment(log.timestamp).format()}</em> :: {log.message}
-            </li>
+            <ListBody data={events} key={`listbody-${i}`} />
         );
     }
 
@@ -42,9 +45,9 @@ class LogViewer extends Component {
         // from here we presume a new log entry has been selected
         // we should re-initialise the state using the new props.
         this.setState(new State(
-            [nextProps.logStream.events],
+            [ nextProps.logStream.events ],
             nextProps.logStreamName,
-            nextProps.nextForwardToken
+            nextProps.logStream.nextForwardToken
         ));
     }
 
@@ -57,26 +60,46 @@ class LogViewer extends Component {
                 console.log('> next result...');
                 console.log(nextResult);
 
-                // todo
-                // return if the nextToken is the same as the existing one and remove the loadbutton 
-                // (null out the nextToken?)
-                
+                if (nextResult.nextForwardToken === this.state.nextToken) {
+                    // the next token is the same as the one we already have
+                    // this means there is currently no further events to show.
+                    // todo - tell the user about this...
+                    console.log('forward token is the same as current');
+                    return;
+                }
+                if (nextResult.events.length === 0) {
+                    // there are no new events to add.
+                    console.log('next events is 0');
+                    return;
+                }
+
                 // add the nextResult.events to the logCollection
                 // update the nextToken
                 // set the state
+                this.state.logCollection.push(nextResult.events)
+                const newState = new State(
+                    this.state.logCollection,
+                    this.state.logStreamName,
+                    nextResult.nextForwardToken
+                );
+                this.setState(newState);
+                console.log('new state...');
+                console.log(this.state);
             });
     }
 
     renderEvents() {
-        const eventList = this.props.logStream.events.map(this.mapLogToEventListItem);
+        //const eventList = this.props.logStream.events.map(this.mapLogToEventListItem);
+        const listBodies = this.state.logCollection.map(this.mapLogCollectionToListBodyComponents);
         return (
             <div className="log-viewer">
                 <strong>{this.props.logStreamName || ''}</strong>
                 <hr />
-                <ul className="log-event-list">
-                    {eventList}
-                </ul>
-                <LoadMoreButton onClick_promise={this.loadMoreButtonClickHandler} />
+                {listBodies}
+                {this.state.nextToken 
+                    ? ( <LoadMoreButton onClick_promise={this.loadMoreButtonClickHandler} /> )
+                    : null}
+                
             </div>
         );
     }
