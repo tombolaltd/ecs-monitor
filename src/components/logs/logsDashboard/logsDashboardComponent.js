@@ -19,24 +19,21 @@ class LogsDashboard extends Component {
         this.handleGetRecentStreamsClick = this.handleGetRecentStreamsClick.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.renderLogEntry = this.renderLogEntry.bind(this);
+        this.renderLogViewer = this.renderLogViewer.bind(this);
     }
     
     updateLogsState(logsResponse) {
         progressBarEvent$.next(new Event(this, 'done'));
-        this.setState({
-            logs: logsResponse.logStreams,
-            logStreamResponse: this.state.logStreamResponse,
-            activeLogStreamName:this.state.activeLogStreamName
-        });
+        this.setState(
+            Object.assign({}, this.state, { logs: logsResponse.logStreams })
+        );
     }
 
     updateLogResponseState(logStreamResponse) {
         progressBarEvent$.next(new Event(this, 'done'));
-        this.setState({
-            logs: this.state.logs,
-            logStreamResponse: logStreamResponse,
-            activeLogStreamName: this.state.activeLogStreamName
-        });
+        this.setState(
+            Object.assign({}, this.state, { logStreamResponse: logStreamResponse })
+        );
     }
 
     handleGetRecentStreamsClick() {
@@ -57,11 +54,9 @@ class LogsDashboard extends Component {
     handleLogClick(log, e) {
         e.preventDefault();
         progressBarEvent$.next(new Event(this, 'start'));
-        this.setState({
-            logs: this.state.logs,
-            logStreamResponse: this.state.logStreamResponse,
-            activeLogStreamName: log.logStreamName
-        })
+        this.setState(
+            Object.assign({}, this.state, { activeLogStreamName: log.logStreamName })
+        );
         getLogEvents(log.logStreamName).then(this.updateLogResponseState);
     }
 
@@ -73,6 +68,12 @@ class LogsDashboard extends Component {
         );
     }
     
+    renderLogViewer() {
+        return (
+            <LogViewer logStream={this.state.logStreamResponse} logStreamName={this.state.activeLogStreamName} />
+        );
+    }
+
     render() {
         const list = this.state.logs.map(this.renderLogEntry);
         return (
@@ -94,7 +95,7 @@ class LogsDashboard extends Component {
                         {list}
                     </ul>
                     <section className="log-viewer-container col s9">
-                        <LogViewer logStream={this.state.logStreamResponse} logStreamName={this.state.activeLogStreamName} />
+                        {this.state.logStreamResponse ? this.renderLogViewer() : null}
                     </section>
                 </div>
             </div>

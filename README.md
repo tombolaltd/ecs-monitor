@@ -4,9 +4,7 @@ A simple monitoring solution which gives you insight into your EC2 Container Ser
 
 As well as aggregation, ECS monitoring tool also offers various features over and above the Amazon Console - Such as _Task churn_, which detects when a service is misbehaving by rapidly starting and stopping tasks.
 
-<img src="https://cdn.worldvectorlogo.com/logos/react.svg" height="50" title="react" alt="react" />
-<img src="https://avatars3.githubusercontent.com/u/984368?v=3&s=100" height="50" title="rxjs" alt="rxjs" />
-<img src="https://camo.githubusercontent.com/a6ee039214392d86e038c5d601f55ec60310d03c/68747470733a2f2f63646e2e7261776769742e636f6d2f7072706c782f7376672d6c6f676f732f6d61737465722f7376672f6d6174657269616c697a652e737667" height="47" title="materializecss" alt="materializecss" />
+<img src="https://cdn.worldvectorlogo.com/logos/react.svg" height="50" title="react" alt="react" /><img src="https://avatars3.githubusercontent.com/u/984368?v=3&s=100" height="50" title="rxjs" alt="rxjs" /><img src="https://camo.githubusercontent.com/a6ee039214392d86e038c5d601f55ec60310d03c/68747470733a2f2f63646e2e7261776769742e636f6d2f7072706c782f7376672d6c6f676f732f6d61737465722f7376672f6d6174657269616c697a652e737667" height="47" title="materializecss" alt="materializecss" />
 
 
 

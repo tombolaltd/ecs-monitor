@@ -7,3 +7,28 @@
 .log-viewer .log-event-item .timestamp {
     font-size: 0.88em;
 }
+
+/*
+  Spinner
+*/
+.log-viewer .spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid #D6D6D6;
+  border-right: 3px solid red;
+  border-bottom: 3px solid red;
+  animation: spin .3s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(1turn);
+  }
+}
