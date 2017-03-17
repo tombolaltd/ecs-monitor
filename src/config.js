@@ -8,20 +8,48 @@ const devCredentials = process.env.NODE_ENV === 'development'
     ? require('../devCredentials.json')
     : void 0;
 
-// always equals 'development' when 'npm start'
-// always equals 'production' when 'npm run build'
-// cannot be manually overriden - https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables
+function refreshCredentials(awsCredentialsObject) {
+    return (cb) => {
+        console.log('> REFRESHING AWS CREDENTIALS');
+        awsConnectionManager.getAuthenticationDetails()
+            .then(updateCredentials(awsCredentialsObject, cb))
+            .catch(cb);
+    };
+}
+
+function updateCredentials(awsCredentialsObject, cb) {
+    return (configDetails) => {
+        awsCredentialsObject.accessKeyId = configDetails.Credentials.AccessKeyId;
+        awsCredentialsObject.secretAccessKey = configDetails.Credentials.SecretAccessKey;
+        awsCredentialsObject.sessionToken = configDetails.Credentials.SessionToken;
+        awsCredentialsObject.expireTime = new Date(configDetails.Credentials.Expiration);
+        
+        /* firing cb() without passing it an error indicates to the awsCredentialsObject
+           that the credentials have been successfully updated. */
+        cb();
+    };
+}
+
+/* always equals 'development' when 'npm start'
+   always equals 'production' when 'npm run build'
+   cannot be manually overriden - https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables */
 function getAwsConfig() {
     return new Promise((resolve, reject) => {
         if (process.env.NODE_ENV === 'production') {
             return awsConnectionManager.getAuthenticationDetails().then((auth) => {
+                const credentials = new AWS.Credentials({
+                    accessKeyId: auth.Credentials.AccessKeyId,
+                    secretAccessKey: auth.Credentials.SecretAccessKey,
+                    sessionToken: auth.Credentials.SessionToken,
+                    expireTime: new Date(auth.Credentials.Expiration)
+                });
+                
+                // override the refresh function to run our own logic.
+                credentials.refresh = refreshCredentials(credentials);
+                
                 return resolve(new AWS.Config({
                     region: AWS_REGION,
-                    credentials: {
-                        accessKeyId: auth.Credentials.AccessKeyId,
-                        secretAccessKey: auth.Credentials.SecretAccessKey,
-                        sessionToken: auth.Credentials.SessionToken
-                    }
+                    credentials: credentials
                 }));
             }).catch(reject);
         }
