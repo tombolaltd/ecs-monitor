@@ -54,22 +54,14 @@ class LogViewer extends Component {
     loadMoreButtonClickHandler() {
         return getLogEvents(this.state.logStreamName)
             .then((nextResult) => {
-                console.log('> existing state...');
-                console.log(this.state);
-
-                console.log('> next result...');
-                console.log(nextResult);
-
                 if (nextResult.nextForwardToken === this.state.nextToken) {
                     // the next token is the same as the one we already have
                     // this means there is currently no further events to show.
                     // todo - tell the user about this...
-                    console.log('forward token is the same as current');
                     return;
                 }
                 if (nextResult.events.length === 0) {
                     // there are no new events to add.
-                    console.log('next events is 0');
                     return;
                 }
 
@@ -83,17 +75,14 @@ class LogViewer extends Component {
                     nextResult.nextForwardToken
                 );
                 this.setState(newState);
-                console.log('new state...');
-                console.log(this.state);
             });
     }
 
     renderEvents() {
-        //const eventList = this.props.logStream.events.map(this.mapLogToEventListItem);
         const listBodies = this.state.logCollection.map(this.mapLogCollectionToListBodyComponents);
         return (
             <div className="log-viewer">
-                <strong>{this.props.logStreamName || ''}</strong>
+                <strong>{this.props.logStreamName}</strong>
                 <hr />
                 {listBodies}
                 {this.state.nextToken 
