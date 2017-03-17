@@ -11,21 +11,24 @@ function dataPointTimestamp(point) {
     return moment(point.Timestamp).format("HH:mm");
 }
 
-function assignChartData(chart) {
-    return (point, index) => {
-        console.log(point);
-        chart.data.labels = point.map(dataPointTimestamp);
-        chart.data.datasets[0].data = point.map(dataPointToMaximum);
-    }
-}
+// function assignChartData(chart) {
+//     return (point, index) => {
+//         console.log(point);
+//         chart.data.labels = point.map(dataPointTimestamp);
+//         chart.data.datasets.data = point.map(dataPointToMaximum);
+//     }
+// }
 
 class Graph extends Component {    
     componentWillReceiveProps(nextProps) {
         // if this.props is the same as nextProps, just return
         // if nextProps is falsy, just return
         
-        nextProps.datapoints.forEach(assignChartData(this.chart));
-
+        // nextProps.datapoints.assignChartData(this.chart);
+        this.chart.data.labels = nextProps.datapoints[0].map(dataPointTimestamp);
+        this.chart.data.datasets[0].data = nextProps.datapoints[0].map(dataPointToMaximum);
+        this.chart.data.labels = nextProps.datapoints[1].map(dataPointTimestamp);
+        this.chart.data.datasets[1].data = nextProps.datapoints[1].map(dataPointToMaximum);
         // safely call after updating the datasets
         // duration is the time for the animation of the redraw in milliseconds
         // lazy is a boolean. if true, the animation can be interrupted by other animations
@@ -40,12 +43,17 @@ class Graph extends Component {
                 labels: this.props.datapoints[0].map(point => point.Timestamp.toString()),
                 datasets: [
                     {
-                        label: this.props.label + ' Memory Utilization',
+                        label: 'Memory Utilization',
                         data: this.props.datapoints[0].map(dataPointToMaximum),
                         backgroundColor: "rgba(75,192,192,0.4)",
                         lineTension: 0.1
                     },
-                    { /*  cpu dataset  */ }
+                    { 
+                        label: 'CPU Utilization',
+                        data: this.props.datapoints[1].map(dataPointToMaximum),
+                        backgroundColor: "rgba(255,152,0,1)",
+                        lineTension: 0.1 
+                    }
                 ]
             },
             options: {
@@ -57,12 +65,14 @@ class Graph extends Component {
                 scales: {
                     xAxes: [{
                         ticks: {
-                            autoSkipPadding:10
+                            autoSkipPadding:10,
                         }
                     }],
                     yAxes: [{
                         ticks: {
                             beginAtZero:true,
+                            max: 100,
+                            stepsize: 20
                         }
                     }]
                 }

@@ -6,8 +6,6 @@ import moment from 'moment';
 
 const _statStreamCache = {};
 
-
-
 function makeCloudwatchClusterMetricStatisticsRequest(clusterName, metricName, fromMinutes, period, to) {
     const params = {
         Namespace: 'AWS/ECS',
@@ -25,8 +23,6 @@ function makeCloudwatchClusterMetricStatisticsRequest(clusterName, metricName, f
         return cloudWatch.getMetricStatistics(params).promise();
     });
 }
-
-
 
 export function metricsStream$(clusterName, metricName) {
     // todo - cache the stream, so we return the same stream given the same params again
