@@ -15,7 +15,6 @@ function storeLatest(result) {
         return;
     }
 
-    console.log(result.data);
     window.sessionStorage.setItem(SESSIONSTORAGE_AUTH_KEY, JSON.stringify(result.data));
     
     return result.data;
