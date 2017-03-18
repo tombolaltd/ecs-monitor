@@ -11,7 +11,8 @@ function describeLogStreamsRequest(prefix, nextToken) {
             logGroupName: 'ecs', // todo: pass this in...
             nextToken: nextToken,
             logStreamNamePrefix: prefix,
-            orderBy: orderBy
+            orderBy: orderBy,
+            descending: true
         }).promise();
     };
 }
