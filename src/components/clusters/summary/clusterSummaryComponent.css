@@ -1,0 +1,9 @@
+.cluster-summary .cluster-entry .cluster-name {
+    font-weight: 500;
+}
+
+.cluster-summary .cluster-entry .number {
+    font-size: 3em;
+    font-weight: 700;
+    text-align: center;
+}
