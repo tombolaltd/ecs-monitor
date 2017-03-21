@@ -15,15 +15,20 @@ function mapToClusterName(cluster) {
     return cluster.clusterName;
 }
 
+function  mapClusterToMetrics(cluster, i) {
+        const clusterName = cluster.clusterName;
+        const cpuDataStream$ = metricsStream$(clusterName, "CPUUtilization");
+        const memoryDataStream$ = metricsStream$(clusterName, "MemoryUtilization");
+        return <li key={clusterName + '-graphMetric' + i}><Graph memoryStream={memoryDataStream$} cpuStream={cpuDataStream$} label={clusterName}/></li>
+}
+
 class ClusterDashboard extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             clusters: [],
             clusterCount: 0,
-            lastUpdateStamp: stamp(),
-            memoryDatapoints: [],
-            cpuDatapoints: []
+            lastUpdateStamp: stamp()
         };
     }
     
@@ -34,41 +39,21 @@ class ClusterDashboard extends Component {
         this.setState({
             clusters: clusters,
             clusterCount: clusters.length,
-            lastUpdateStamp: stamp(),
-            memoryDatapoints: this.state.memoryDatapoints,
-            cpuDatapoints: this.state.cpuDatapoints
+            lastUpdateStamp: stamp()
         });
-    }
-
-    updateMemoryDatapointsState(memoryDatapoints)
-    {
-        this.setState(
-            Object.assign({}, this.state, {memoryDatapoints: memoryDatapoints})
-         )
-    }
-
-    updateCpuDatapointsState(cpuDatapoints)
-    {
-        this.setState(
-            Object.assign({}, this.state, {cpuDatapoints: cpuDatapoints})
-         )
     }
 
     componentWillMount() {
         this.clusterStreamObserver = clusterStream$.subscribe(this.updateClusterState.bind(this));
-        this.metricsMemoryStreamObserver = metricsStream$("DEV-ECS-2", "MemoryUtilization").subscribe(this.updateMemoryDatapointsState.bind(this))
-        this.metricsCpuStreamObserver = metricsStream$("DEV-ECS-2", "CPUUtilization").subscribe(this.updateCpuDatapointsState.bind(this))
     }
 
     componentWillUnmount() {
         this.clusterStreamObserver.unsubscribe();
-        this.metricsMemoryStreamObserver.unsubscribe();
-        this.metricsCpuStreamObserver.unsubscribe();
     }
 
     render() {
         const clusterNames = this.state.clusters.map(mapToClusterName);
-        const chartDatapoints = [(this.state.memoryDatapoints), (this.state.cpuDatapoints)];
+        const graphBody = this.state.clusters.map(mapClusterToMetrics, this);
         return (
             <div className="cluster-summary">
                 <PageDescription header={`${this.state.clusterCount} monitored clusters`} lastUpdateStamp={this.state.lastUpdateStamp} />
@@ -79,12 +64,15 @@ class ClusterDashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col s6"><Graph datapoints={chartDatapoints} label="DEV-ECS-2"/></div>
+                    <div className="col s6">
+                        <ul>
+                            {graphBody}
+                        </ul>
+                    </div>
                 </div>
             </div>
         );
     }
 }
-
 
 export default ClusterDashboard;

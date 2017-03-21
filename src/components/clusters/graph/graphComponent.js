@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import moment from 'moment';
 import Chart from 'chart.js';
+import { Observable } from 'rxjs';
 
 function dataPointToMaximum(point) {
     return point.Maximum;
@@ -11,46 +12,42 @@ function dataPointTimestamp(point) {
     return moment(point.Timestamp).format("HH:mm");
 }
 
-// function assignChartData(chart) {
-//     return (point, index) => {
-//         console.log(point);
-//         chart.data.labels = point.map(dataPointTimestamp);
-//         chart.data.datasets.data = point.map(dataPointToMaximum);
-//     }
-// }
-
 class Graph extends Component {    
-    componentWillReceiveProps(nextProps) {
-        // if this.props is the same as nextProps, just return
-        // if nextProps is falsy, just return
-        
-        // nextProps.datapoints.assignChartData(this.chart);
-        this.chart.data.labels = nextProps.datapoints[0].map(dataPointTimestamp);
-        this.chart.data.datasets[0].data = nextProps.datapoints[0].map(dataPointToMaximum);
-        this.chart.data.labels = nextProps.datapoints[1].map(dataPointTimestamp);
-        this.chart.data.datasets[1].data = nextProps.datapoints[1].map(dataPointToMaximum);
-        // safely call after updating the datasets
-        // duration is the time for the animation of the redraw in milliseconds
-        // lazy is a boolean. if true, the animation can be interrupted by other animations
+
+    updateMemoryDatapointsState(memoryDatapoints)
+    {
+        this.chart.data.labels = memoryDatapoints.map(dataPointTimestamp);
+        this.chart.data.datasets[0].data = memoryDatapoints.map(dataPointToMaximum);
+        this.chart.update(1500, false);
+    }
+
+    updateCpuDatapointsState(cpuDatapoints)
+    {
+        this.chart.data.labels = cpuDatapoints.map(dataPointTimestamp);
+        this.chart.data.datasets[1].data = cpuDatapoints.map(dataPointToMaximum);
         this.chart.update(1500, false);
     }
 
     componentDidMount() {
+        this.memoryStream = this.props.memoryStream.subscribe(this.updateMemoryDatapointsState.bind(this));
+        this.cpuStream = this.props.cpuStream.subscribe(this.updateCpuDatapointsState.bind(this));
+
         const thisNode = ReactDOM.findDOMNode(this);
+      
         this.chart = new Chart(thisNode, {
             type: 'line',
             data: {
-                labels: this.props.datapoints[0].map(point => point.Timestamp.toString()),
+                labels: [],
                 datasets: [
                     {
                         label: 'Memory Utilization',
-                        data: this.props.datapoints[0].map(dataPointToMaximum),
+                        data: [],
                         backgroundColor: "rgba(75,192,192,0.4)",
                         lineTension: 0.1
                     },
                     { 
                         label: 'CPU Utilization',
-                        data: this.props.datapoints[1].map(dataPointToMaximum),
+                        data: [],
                         backgroundColor: "rgba(255,152,0,1)",
                         lineTension: 0.1 
                     }
@@ -71,17 +68,21 @@ class Graph extends Component {
                     yAxes: [{
                         ticks: {
                             beginAtZero:true,
-                            max: 100,
-                            stepsize: 20
+                            max: 100
                         }
                     }]
                 }
             }
-        });
+        }); 
     }
     
+    componentWillUnmount() {
+        this.memoryStream.unsubscribe();
+        this.cpuStream.unsubscribe();
+    }
+
     render() {
-        return (
+        return (           
             <canvas id={this.props.label + '-graph'} className="graph" width="400" height="400"></canvas>
         );
     }
@@ -89,7 +90,8 @@ class Graph extends Component {
 
 Graph.propTypes = {
     label: PropTypes.string.isRequired,
-    datapoints: PropTypes.array.isRequired
+    memoryStream: PropTypes.instanceOf(Observable).isRequired,
+    cpuStream: PropTypes.instanceOf(Observable).isRequired
 };
 
 export default Graph;
