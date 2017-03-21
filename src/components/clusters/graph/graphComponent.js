@@ -14,23 +14,17 @@ function dataPointTimestamp(point) {
 
 class Graph extends Component {    
 
-    updateMemoryDatapointsState(memoryDatapoints)
-    {
-        this.chart.data.labels = memoryDatapoints.map(dataPointTimestamp);
-        this.chart.data.datasets[0].data = memoryDatapoints.map(dataPointToMaximum);
-        this.chart.update(1500, false);
-    }
-
-    updateCpuDatapointsState(cpuDatapoints)
-    {
-        this.chart.data.labels = cpuDatapoints.map(dataPointTimestamp);
-        this.chart.data.datasets[1].data = cpuDatapoints.map(dataPointToMaximum);
+    updateChart(datapoints) {
+        this.chart.data.labels = datapoints[0].map(dataPointTimestamp);
+        this.chart.data.datasets[0].data = datapoints[0].map(dataPointToMaximum);
+        this.chart.data.labels = datapoints[1].map(dataPointTimestamp);
+        this.chart.data.datasets[1].data = datapoints[1].map(dataPointToMaximum);
         this.chart.update(1500, false);
     }
 
     componentDidMount() {
-        this.memoryStream = this.props.memoryStream.subscribe(this.updateMemoryDatapointsState.bind(this));
-        this.cpuStream = this.props.cpuStream.subscribe(this.updateCpuDatapointsState.bind(this));
+        const streamObservables = Observable.zip(this.props.memoryStream, this.props.cpuStream)
+        this.streams = streamObservables.subscribe(this.updateChart.bind(this));
 
         const thisNode = ReactDOM.findDOMNode(this);
       
@@ -77,8 +71,8 @@ class Graph extends Component {
     }
     
     componentWillUnmount() {
-        this.memoryStream.unsubscribe();
-        this.cpuStream.unsubscribe();
+        this.streams.unsubscribe();
+        
     }
 
     render() {
