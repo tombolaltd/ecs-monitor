@@ -71,8 +71,8 @@ class Graph extends Component {
     }
     
     componentWillUnmount() {
-        this.memoryStream.unsubscribe();
-        this.cpuStream.unsubscribe();
+        this.streams.unsubscribe();
+        
     }
 
     render() {
