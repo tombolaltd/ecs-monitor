@@ -2,39 +2,30 @@ import AWS from 'aws-sdk';
 import awsRequest from '../awsRequest';
 
 function describeLogStreamsRequest(prefix, nextToken) {
+    const orderBy = prefix ? 'LogStreamName' : 'LastEventTime' ;
+
+    // http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DescribeLogStreams.html
     return function(awsConfig) {
-        const logs = new AWS.CloudWatchLogs(awsConfig);
-        // http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DescribeLogStreams.html
-        return logs.describeLogStreams({
+        const cwLogs = new AWS.CloudWatchLogs(awsConfig);    
+        return cwLogs.describeLogStreams({
             logGroupName: 'ecs', // todo: pass this in...
-            descending: true,
             nextToken: nextToken,
-            logStreamNamePrefix: prefix
-            // "descending": boolean,
-            // "limit": number,
-            // "logGroupName": "string",
-            // "logStreamNamePrefix": "string",
-            // "nextToken": "string",
-            // "orderBy": "string"
+            logStreamNamePrefix: prefix,
+            orderBy: orderBy,
+            descending: true
         }).promise();
     };
 }
 
 function getLogEventsByName(logStreamName, nextToken) {
+    // http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_GetLogEvents.html
     return function(awsConfig) {
-        const logs = new AWS.CloudWatchLogs(awsConfig);
-        return logs.getLogEvents({
-            logGroupName: 'ecs',
+        const cwLogs = new AWS.CloudWatchLogs(awsConfig);
+        return cwLogs.getLogEvents({
+            logGroupName: 'ecs', // todo: pass this in...
             logStreamName: logStreamName,
             startFromHead: true,
             nextToken: nextToken
-            // "endTime": number,
-            // "limit": number,
-            // "logGroupName": "string",
-            // "logStreamName": "string",
-            // "nextToken": "string",
-            // "startFromHead": boolean,
-            // "startTime": number
         }).promise();
     }
 }

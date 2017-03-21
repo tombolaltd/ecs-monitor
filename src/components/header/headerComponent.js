@@ -13,7 +13,8 @@ const clusterPagePath = MOUNTING_PATH + 'clusters';
 const logsPagePath = MOUNTING_PATH + 'logs';
 
 
-class Header extends Component {
+class Header extends Component {    
+
     processActiveClassName(route) {
         if (!this.props.activePath) return;
 

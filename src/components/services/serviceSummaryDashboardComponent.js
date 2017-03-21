@@ -4,7 +4,6 @@ import ServiceTaskOverview from './serviceTaskOverviewComponent/serviceTaskOverv
 import Deployments from './deploymentsComponent/deploymentsComponent';
 import AggregatedServiceEvents from './aggregatedEventsComponent';
 import TaskChurn from './taskChurnComponent/taskChurnComponent';
-//import MetricAlerts from './metricAlertsComponent';
 import { servicesStream$ } from '../../dataStreams/serviceStreams';
 import moment from 'moment';
 
@@ -49,7 +48,6 @@ class ServiceSummaryDashboard extends Component {
                     <div className="col s3"><TaskChurn /></div>
                 </div>
                 <AggregatedServiceEvents />
-                {/*<MetricAlerts />*/}
             </div>
         );
     }

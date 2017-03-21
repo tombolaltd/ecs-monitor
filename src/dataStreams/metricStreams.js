@@ -5,8 +5,10 @@ import awsRequest from '../awsRequest';
 import moment from 'moment';
 
 const _statStreamCache = {};
+const _metricStreamCache = {};
 
-function makeCloudwatchClusterMetricStatisticsRequest(clusterName, metricName, fromMinutes, period, to) {
+
+function cloudwatchClusterMetricStatisticsRequest(clusterName, metricName, fromMinutes, period, to) {
     const params = {
         Namespace: 'AWS/ECS',
         MetricName: metricName,
@@ -25,8 +27,13 @@ function makeCloudwatchClusterMetricStatisticsRequest(clusterName, metricName, f
 }
 
 export function metricsStream$(clusterName, metricName) {
-    // todo - cache the stream, so we return the same stream given the same params again
-    return Observable.from(makeCloudwatchClusterMetricStatisticsRequest(clusterName, metricName, 30, 60, moment().toDate()))
+    const cacheKey = clusterName + metricName;
+    const cachedObs = _metricStreamCache[cacheKey];
+    if (cachedObs) {
+        return cachedObs;
+    }
+
+    const obs$ = Observable.from(cloudwatchClusterMetricStatisticsRequest(clusterName, metricName, 30, 60, moment().toDate()))
         .map(x => { 
             if (x.Datapoints.length === 0) {
                 return [];
@@ -36,6 +43,9 @@ export function metricsStream$(clusterName, metricName) {
         .filter(x => x.length !== 0)
         .retryWhen(streamRetryFn(3000))
         .share();
+
+    _metricStreamCache[cacheKey] = obs$;
+    return obs$;
 }
 
 export function metricStatStream$(clusterName, metricName) {
