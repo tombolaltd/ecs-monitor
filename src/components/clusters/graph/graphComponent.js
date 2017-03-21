@@ -23,11 +23,9 @@ class Graph extends Component {
     }
 
     componentDidMount() {
-        const streamObservables = Observable.zip(this.props.memoryStream, this.props.cpuStream)
-        this.streams = streamObservables.subscribe(this.updateChart.bind(this));
-
+        const streamObservables = Observable.zip(this.props.memoryStream, this.props.cpuStream);
         const thisNode = ReactDOM.findDOMNode(this);
-      
+        
         this.chart = new Chart(thisNode, {
             type: 'line',
             data: {
@@ -67,12 +65,13 @@ class Graph extends Component {
                     }]
                 }
             }
-        }); 
+        });
+
+        this.streams = streamObservables.subscribe(this.updateChart.bind(this));
     }
     
     componentWillUnmount() {
         this.streams.unsubscribe();
-        
     }
 
     render() {

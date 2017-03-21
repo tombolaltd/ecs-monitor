@@ -15,11 +15,15 @@ function mapToClusterName(cluster) {
     return cluster.clusterName;
 }
 
-function  mapClusterToMetrics(cluster, i) {
+function mapClusterToMetrics(cluster, i) {
         const clusterName = cluster.clusterName;
         const cpuDataStream$ = metricsStream$(clusterName, "CPUUtilization");
         const memoryDataStream$ = metricsStream$(clusterName, "MemoryUtilization");
-        return <li key={clusterName + '-graphMetric' + i}><Graph memoryStream={memoryDataStream$} cpuStream={cpuDataStream$} label={clusterName}/></li>
+        return (
+            <li key={clusterName + '-graphMetric' + i}>
+                <Graph memoryStream={memoryDataStream$} cpuStream={cpuDataStream$} label={clusterName}/>
+            </li>
+        );
 }
 
 class ClusterDashboard extends Component {
