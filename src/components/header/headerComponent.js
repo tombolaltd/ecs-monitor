@@ -14,6 +14,7 @@ const logsPagePath = MOUNTING_PATH + 'logs';
 
 
 class Header extends Component {    
+
     processActiveClassName(route) {
         if (!this.props.activePath) return;
 

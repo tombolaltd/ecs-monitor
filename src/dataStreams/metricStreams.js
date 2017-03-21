@@ -26,8 +26,6 @@ function cloudwatchClusterMetricStatisticsRequest(clusterName, metricName, fromM
     });
 }
 
-
-
 export function metricsStream$(clusterName, metricName) {
     const cacheKey = clusterName + metricName;
     const cachedObs = _metricStreamCache[cacheKey];

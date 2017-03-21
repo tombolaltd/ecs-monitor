@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PageDescription from '../pageDescription/pageDescriptionComponent';
 import ClusterSummary from './summary/clusterSummaryComponent';
-//import Graph from './graph/graphComponent';
+import Graph from './graph/graphComponent';
 import MetricStatGroup from './metricStats/metricStatsGroupComponent';
 import { clusterStream$ } from '../../dataStreams/clusterStreams';
+import { metricsStream$ } from '../../dataStreams/metricStreams';
 import moment from 'moment';
 
 function stamp() {
@@ -14,13 +15,20 @@ function mapToClusterName(cluster) {
     return cluster.clusterName;
 }
 
+function  mapClusterToMetrics(cluster, i) {
+        const clusterName = cluster.clusterName;
+        const cpuDataStream$ = metricsStream$(clusterName, "CPUUtilization");
+        const memoryDataStream$ = metricsStream$(clusterName, "MemoryUtilization");
+        return <li key={clusterName + '-graphMetric' + i}><Graph memoryStream={memoryDataStream$} cpuStream={cpuDataStream$} label={clusterName}/></li>
+}
+
 class ClusterDashboard extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             clusters: [],
             clusterCount: 0,
-            lastUpdateStamp: stamp(),
+            lastUpdateStamp: stamp()
         };
     }
     
@@ -31,7 +39,7 @@ class ClusterDashboard extends Component {
         this.setState({
             clusters: clusters,
             clusterCount: clusters.length,
-            lastUpdateStamp: stamp(),
+            lastUpdateStamp: stamp()
         });
     }
 
@@ -45,6 +53,7 @@ class ClusterDashboard extends Component {
 
     render() {
         const clusterNames = this.state.clusters.map(mapToClusterName);
+        const graphBody = this.state.clusters.map(mapClusterToMetrics, this);
         return (
             <div className="cluster-summary">
                 <PageDescription header={`${this.state.clusterCount} monitored clusters`} lastUpdateStamp={this.state.lastUpdateStamp} />
@@ -54,10 +63,16 @@ class ClusterDashboard extends Component {
                         <MetricStatGroup clusters={clusterNames} />
                     </div>
                 </div>
+                <div className="row">
+                    <div className="col s6">
+                        <ul>
+                            {graphBody}
+                        </ul>
+                    </div>
+                </div>
             </div>
         );
     }
 }
-
 
 export default ClusterDashboard;

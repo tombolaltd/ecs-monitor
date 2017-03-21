@@ -4,7 +4,6 @@ import config from '../config';
 import awsRequest from '../awsRequest';
 import { streamRetryFn } from './common';
 
-
 function getClusterArns() {
     return awsRequest.create((awsConfig) => {
         const ecs = new AWS.ECS(awsConfig);
