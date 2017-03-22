@@ -7,6 +7,10 @@ import { clusterStream$ } from '../../dataStreams/clusterStreams';
 import { metricsStream$ } from '../../dataStreams/metricStreams';
 import moment from 'moment';
 
+const inlineBlock = {
+    display: 'inline-block'
+};
+
 function stamp() {
     return moment().format('dddd Do MMMM YYYY, h:mm:ss a');
 }
@@ -20,7 +24,7 @@ function mapClusterToMetrics(cluster, i) {
         const cpuDataStream$ = metricsStream$(clusterName, "CPUUtilization");
         const memoryDataStream$ = metricsStream$(clusterName, "MemoryUtilization");
         return (
-            <li key={clusterName + '-graphMetric' + i}>
+            <li key={clusterName + '-graphMetric' + i} style={inlineBlock}>
                 <Graph memoryStream={memoryDataStream$} cpuStream={cpuDataStream$} label={clusterName}/>
             </li>
         );
@@ -68,7 +72,7 @@ class ClusterDashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col s6">
+                    <div className="col s12">
                         <ul>
                             {graphBody}
                         </ul>
