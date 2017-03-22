@@ -51,7 +51,7 @@ In order for the server to do this you need to set **2 environment variables:**
 ```
 $ docker build -t ecs-monitoring-tool {checkout_dir}
 $ docker run -p 1337:1337 --rm \
-	-e AWS_ACCESS_KEY_ID=... \
+    -e AWS_ACCESS_KEY_ID=... \
     -e AWS_SECRET_ACCESS_KEY=... \
     ecs-monitoring-tool
 ```
