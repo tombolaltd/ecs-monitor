@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { servicesStream$ } from '../../../dataStreams/serviceStreams';
 import './serviceTaskOverviewComponent.css';
 
@@ -19,10 +20,12 @@ function buildListItem(service) {
 class ServiceTaskOverview extends Component {
     constructor(props) {
         super(props);
+        this.initialRender = true;
         this.state = { services: [] };
     }
     
     updateState(services) {
+        this.initialRender = false;
         if (!services || services.length === 0) {
             return;
         }
@@ -38,35 +41,55 @@ class ServiceTaskOverview extends Component {
         this.servicesStreamObserver.unsubscribe();
     }
 
+    renderLoadingBar() {
+        return (
+            <div className="progress">
+                <div className="indeterminate"></div>
+            </div>
+        );
+    }
+
     renderNoServices() {
         return (
-            <p>There are no services to show</p>
-        )
+            <div>
+                <p>There are no services.</p>
+            </div>
+        );
     }
 
     renderTable() {
         const tableBody = this.state.services.map(buildListItem);
         return (
-            <table className="slimmer-table service-overview-table striped">
-                <thead>
-                    <tr>
-                        <th>Service Name</th>
-                        <th>Desired</th>
-                        <th>Running</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tableBody}
-                </tbody>
-            </table>
+            <ReactCSSTransitionGroup
+                        transitionName="component-fadein"
+                        transitionAppear={true}
+                        transitionAppearTimeout={500}>
+                <table className="slimmer-table service-overview-table striped" key="service-overview-table">
+                    <thead>
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Desired</th>
+                            <th>Running</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tableBody}
+                    </tbody>
+                </table>
+            </ReactCSSTransitionGroup>
         );
     }
     
     render() {
-        const content = this.state.services.length === 0
-            ? this.renderNoServices()
-            : this.renderTable();
+        let content;
+        if (this.initialRender) {
+            content = this.renderLoadingBar();
+        } else if (this.state.services.length === 0) {
+            content = this.renderNoServices();
+        } else {
+            content = this.renderTable();
+        }
         
         return (
             <section className="service-task-overview">

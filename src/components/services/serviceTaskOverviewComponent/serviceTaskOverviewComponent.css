@@ -1,3 +1,7 @@
+.service-task-overview .progress {
+    margin: 3em 0;
+}
+
 .service-overview-entry .thumb_up {
     color: green;
 }
@@ -11,4 +15,13 @@
     white-space: nowrap;
     max-width: 2em;
     text-overflow: ellipsis;
+}
+
+.component-fadein-appear {
+  opacity: 0.01;  
+}
+
+.component-fadein-appear.component-fadein-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
 }
