@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { loadingBar } from '../../loading';
 import { servicesStream$ } from '../../../dataStreams/serviceStreams';
 import './serviceTaskOverviewComponent.css';
 
@@ -41,14 +42,6 @@ class ServiceTaskOverview extends Component {
         this.servicesStreamObserver.unsubscribe();
     }
 
-    renderLoadingBar() {
-        return (
-            <div className="progress">
-                <div className="indeterminate"></div>
-            </div>
-        );
-    }
-
     renderNoServices() {
         return (
             <div>
@@ -63,7 +56,9 @@ class ServiceTaskOverview extends Component {
             <ReactCSSTransitionGroup
                         transitionName="component-fadein"
                         transitionAppear={true}
-                        transitionAppearTimeout={500}>
+                        transitionAppearTimeout={500}
+                        transitionEnter={false}
+                        transitionLeave={false}>
                 <table className="slimmer-table service-overview-table striped" key="service-overview-table">
                     <thead>
                         <tr>
@@ -84,7 +79,7 @@ class ServiceTaskOverview extends Component {
     render() {
         let content;
         if (this.initialRender) {
-            content = this.renderLoadingBar();
+            content = loadingBar();
         } else if (this.state.services.length === 0) {
             content = this.renderNoServices();
         } else {
@@ -92,7 +87,7 @@ class ServiceTaskOverview extends Component {
         }
         
         return (
-            <section className="service-task-overview">
+            <section className="service-task-overview component-panel">
                 <div className="card-panel">
                     <strong className="card-header">Task overview</strong>
                     <div className="divider"></div>

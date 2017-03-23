@@ -28,6 +28,19 @@ body {
     padding: 0.25em;
 }
 
+.component-fadein-appear {
+  opacity: 0.01;  
+}
+
+.component-fadein-appear.component-fadein-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.component-panel .progress {
+    margin: 3em 0;
+}
+
 /*
   NProgress overrides
 */

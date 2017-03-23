@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { loadingBar } from '../../loading';
 import moment from 'moment';
 import { aggregatedServiceDeploymentStream$ } from '../../../dataStreams/serviceStreams';
 import './deploymentsComponent.css';
@@ -22,10 +24,12 @@ function buildListItem(deployment) {
 class Deployments extends Component {
     constructor(props) {
         super(props);
+        this.initialRender = true;
         this.state = { deployments: [] };
     }
     
     updateState(deployments) {
+        this.initialRender = false;
         if (!deployments || deployments.length === 0) {
             return;
         }
@@ -40,7 +44,7 @@ class Deployments extends Component {
     componentWillUnmount() {
         this.serviceDeploymentObserver.unsubscribe();
     }
-    
+
     renderNoDeployments() {
         return (
             <p>There are no deployments to show</p>
@@ -50,29 +54,41 @@ class Deployments extends Component {
     renderTable() {
         const tableBody = this.state.deployments.map(buildListItem);
         return (
-            <table className="slimmer-table deployments-table striped">
-                <thead>
-                    <tr>
-                        <th>When</th>
-                        <th>Desired</th>
-                        <th>Pending</th>
-                        <th>Task Definition</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tableBody}
-                </tbody>
-            </table>
+            <ReactCSSTransitionGroup
+                    transitionName="component-fadein"
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionEnter={false}
+                    transitionLeave={false}>
+                <table className="slimmer-table deployments-table striped">
+                    <thead>
+                        <tr>
+                            <th>When</th>
+                            <th>Desired</th>
+                            <th>Pending</th>
+                            <th>Task Definition</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tableBody}
+                    </tbody>
+                </table>
+            </ReactCSSTransitionGroup>
         );
     }
 
     render() {
-        const content = this.state.deployments.length === 0
-            ? this.renderNoDeployments()
-            : this.renderTable();
+        let content;
+        if (this.initialRender) {
+            content = loadingBar();
+        } else if (this.state.deployments.length === 0) {
+            content = this.renderNoDeployments();
+        } else {
+            content = this.renderTable();
+        }
 
         return (
-            <section className="service-deployments">
+            <section className="service-deployments component-panel">
                 <div className="card-panel">
                     <strong className="card-header">Deployments</strong>
                     <div className="divider"></div>
