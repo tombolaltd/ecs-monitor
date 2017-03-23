@@ -1,0 +1,10 @@
+.service-events {
+    position:relative;
+}
+.service-events .options-container {
+    position: absolute;
+    top:0;
+    right:0;
+    padding:0.5em;
+    background:#fff3e0;
+}

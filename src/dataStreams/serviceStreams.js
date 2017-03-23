@@ -86,12 +86,10 @@ export function aggregatedServiceDeploymentStream$(deploymentCount) {
         });
 }
 
-export function getAggregatedEventStream$(eventCount) {
-    return servicesStream$
-        .map(services => {
-            return services
-                .reduce((acc, x) => acc.concat(x.events), [])
-                .sort((a,b) => b.createdAt - a.createdAt)
-                .slice(0, eventCount);
-        });
-}
+export const aggregatedEventStream$ =
+    servicesStream$
+    .map(services => {
+        return services
+            .reduce((acc, x) => acc.concat(x.events), [])
+            .sort((a,b) => b.createdAt - a.createdAt);
+    });

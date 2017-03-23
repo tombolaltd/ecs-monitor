@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PageDescription from '../pageDescription/pageDescriptionComponent';
 import ServiceTaskOverview from './serviceTaskOverviewComponent/serviceTaskOverviewComponent';
 import Deployments from './deploymentsComponent/deploymentsComponent';
-import AggregatedServiceEvents from './aggregatedEventsComponent';
+import AggregatedServiceEvents from './aggregatedEventsComponent/aggregatedEventsComponent';
 import TaskChurn from './taskChurnComponent/taskChurnComponent';
 import { servicesStream$ } from '../../dataStreams/serviceStreams';
 import moment from 'moment';
