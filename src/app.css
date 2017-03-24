@@ -28,11 +28,14 @@ body {
     padding: 0.25em;
 }
 
-.component-fadein-appear {
+.component-fadein-appear,
+.component-fadein-enter
+{
   opacity: 0.01;  
 }
 
-.component-fadein-appear.component-fadein-appear-active {
+.component-fadein-appear.component-fadein-appear-active,
+.component-fadein-enter.component-fadein-enter-active {
   opacity: 1;
   transition: opacity .5s ease-in;
 }

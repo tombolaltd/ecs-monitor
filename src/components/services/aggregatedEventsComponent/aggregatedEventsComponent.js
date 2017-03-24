@@ -88,8 +88,8 @@ class AggregatedServiceEvents extends Component {
                     transitionName="component-fadein"
                     transitionAppear={true}
                     transitionAppearTimeout={500}
-                    transitionEnter={false}
-                    transitionLeave={false}>
+                    transitionLeave={false}
+                    transitionEnterTimeout={500}>
                 {listItems}
             </ReactCSSTransitionGroup>
         )
