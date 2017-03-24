@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { loadingBar } from '../../loading';
 import moment from 'moment';
 import config from '../../../config';
 import { servicesStream$ } from '../../../dataStreams/serviceStreams';
 import './taskChurnComponent.css';
+
+
+const tooltip = `
+            Monitors for 'task churn' in each service. 
+            A task churn is triggered when many 'task started' events are fired on a given service within a specified timeframe (${config.TASK_CHURN_DETECTION_TIME_THRESHOLD} minutes).
+            This would usually lead to investigation - Why is ECS starting (and stopping?) tasks frantically?
+        `;
+
 
 class ChurnModel {
     constructor(serviceName, churnEvents) {
@@ -15,7 +25,11 @@ class ChurnModel {
 class TaskChurn extends Component {
     constructor(props) {
         super(props);
+        this.initialRender = true;
         this.state = { churnEntries: [] };
+
+        // bind methods
+        this.mapChurnToDOM = this.mapChurnToDOM.bind(this);
     }
 
     scanServiceEventsForTaskChurn(services) {
@@ -31,6 +45,7 @@ class TaskChurn extends Component {
     }
 
     updateState(services) {
+        this.initialRender = false;
         if (!services || services.length === 0) {
             return;
         }
@@ -88,26 +103,43 @@ class TaskChurn extends Component {
         }
     }
 
+    renderNoEntries() {
+        return (
+            <p className="no-task-churn-text">
+                <i className="tiny material-icons no-churns-icon">thumb_up</i>
+                No task churn detected</p>
+        );
+    }
+
+    renderList() {
+        const churnEntries = this.state.churnEntries.map(this.mapChurnToDOM);
+        return (
+            <ReactCSSTransitionGroup
+                    transitionName="component-fadein"
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionEnter={false}
+                    transitionLeave={false}>
+                <dl>
+                    {churnEntries}
+                </dl>
+            </ReactCSSTransitionGroup>
+        );
+    }
+
     render() {
         let body;
-        const tooltip = `
-            Monitors for 'task churn' in each service. 
-            A task churn is triggered when many 'task started' events are fired on a given service within a specified timeframe (${config.TASK_CHURN_DETECTION_TIME_THRESHOLD} minutes).
-            This would usually lead to investigation - Why is ECS starting (and stopping?) tasks frantically?
-        `;
-
-        if (this.state.churnEntries.length === 0) {
-           body = (
-               <p className="no-task-churn-text"><i className="tiny material-icons no-churns-icon">thumb_up</i> No task churn detected</p>
-           )
+        if (this.initialRender) {
+            body = loadingBar();
+        }
+        else if (this.state.churnEntries.length === 0) {
+            body = this.renderNoEntries();
         } else {
-           body = (
-                <dl>{this.state.churnEntries.map(this.mapChurnToDOM.bind(this))}</dl>
-           );
+            body = this.renderList();
         }
 
         return (
-            <section className="service-task-churn">
+            <section className="service-task-churn component-panel">
                 <div className="card-panel">
                     <strong className="card-header">
                         Task Churn 
