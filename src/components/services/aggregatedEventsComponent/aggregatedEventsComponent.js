@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { loadingBar } from '../../loading';
 import { Subject } from 'rxjs';
 import { aggregatedEventStream$ } from '../../../dataStreams/serviceStreams';
 import moment from 'moment';
@@ -35,12 +37,16 @@ class AggregatedServiceEvents extends Component {
     constructor(props) {
         super(props);
         this.state = { events: [] };
+        this.initialRender = true;
 
+        // bind methods
         this.updateState = this.updateState.bind(this);
         this.changeEventCount = this.changeEventCount.bind(this);
     }
     
     updateState(events) {
+        this.initialRender = false;
+
         if (!events || events.length === 0) {
             return;
         }
@@ -75,14 +81,35 @@ class AggregatedServiceEvents extends Component {
         );
     }
 
-    render() {
-        const body = this.state.events.length === 0
-            ? this.renderNoEvents()
-            : this.state.events.map(buildListItem);
-        const now = moment().format('hh:mm:ss a');
-        
+    renderEvents() {
+        const listItems = this.state.events.map(buildListItem);
         return (
-            <section className="service-events">
+            <ReactCSSTransitionGroup
+                    transitionName="component-fadein"
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionEnter={false}
+                    transitionLeave={false}>
+                {listItems}
+            </ReactCSSTransitionGroup>
+        )
+    }
+
+    render() {
+        const now = moment().format('hh:mm:ss a');        
+        
+        let body;
+        if (this.initialRender) {
+            body = loadingBar();
+        }
+        else if (this.state.events.length === 0) {
+            body = this.renderNoEvents();
+        } else {
+            body = this.renderEvents();
+        }
+
+        return (
+            <section className="service-events component-panel">
                 <div className="card-panel">
                     <div className="options-container">
                         <QuantitySelector onChange={this.changeEventCount} />
