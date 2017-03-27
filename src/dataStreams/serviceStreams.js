@@ -5,6 +5,7 @@ import awsRequest from '../awsRequest';
 import { streamRetryFn } from './common';
 import { clusterArnStream$ } from './clusterStreams';
 
+const _serviceStreamCache = {};
 
 function getServiceArns(clusterArn) {
     const params = { cluster: clusterArn };
@@ -77,13 +78,23 @@ export function serviceStreamForCluster$(clusterName) {
 
 // Deployment component stream
 export function aggregatedServiceDeploymentStream$(deploymentCount) {
-    return servicesStream$
+    const cacheKey = `aggregatedServiceDeploymentStream::${deploymentCount}`;
+    const cachedObs$ = _serviceStreamCache[cacheKey];
+    if (cachedObs$) {
+        return cachedObs$;
+    }
+
+    const obs$ = servicesStream$
         .map(services => {
             return services
                 .reduce((acc, x) => acc.concat(x.deployments), [])
                 .sort((a,b) => b.createdAt - a.createdAt)
                 .slice(0, deploymentCount);
         });
+    
+    _serviceStreamCache[cacheKey] = obs$;
+
+    return obs$;
 }
 
 export const aggregatedEventStream$ =

@@ -23,7 +23,6 @@ export const newDeploymentEvent$ =
     aggregatedServiceDeploymentStream$(5)
     .flatMap(deployments => deployments)
     .filter(isNewDeployment)
-    .do(console.log.bind(console))
     .map(deployment => {
         return new Event(newDeploymentEvent$, {
             message: 'deployment started',
