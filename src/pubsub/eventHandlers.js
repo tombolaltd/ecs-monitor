@@ -1,5 +1,6 @@
 import NProgress from 'nprogress';
 import { progressBarEvent$, newDeploymentEvent$ } from './eventStreams';
+import { formatTaskDefinitionString } from '../utils/stringFormatting';
 
 const handlers = [];
 
@@ -13,7 +14,8 @@ function progressBarHandler(evt) {
 
 function deploymentHandler(evt) {
     if (evt.data.message.indexOf('started') !== -1) {
-        window.Materialize.toast(`DEPLOYMENT OF ${evt.data.deployment.serviceName} STARTED`, 10000);
+        const taskDefinitionName = formatTaskDefinitionString(evt.data.deployment.taskDefinition);
+        window.Materialize.toast(`DEPLOYMENT OF ${taskDefinitionName} STARTED`, 10000);
     }
 }
 

@@ -3,12 +3,9 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { loadingBar } from '../../loading';
 import moment from 'moment';
 import { aggregatedServiceDeploymentStream$ } from '../../../dataStreams/serviceStreams';
+import { formatTaskDefinitionString } from '../../../utils/stringFormatting';
 import './deploymentsComponent.css';
 
-function formatTaskDefinitionString(taskDefinition) {
-    let lastIndexOfSlash = taskDefinition.lastIndexOf('/');
-    return taskDefinition.substring(lastIndexOfSlash + 1);
-}
 
 function buildListItem(deployment) {
     return (

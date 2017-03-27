@@ -1,13 +1,13 @@
 import { Subject } from 'rxjs';
 import { aggregatedServiceDeploymentStream$ } from '../dataStreams/serviceStreams';
-import { SERVICE_REFRESH_INTERVAL } from '../config';
+import config from '../config';
 import moment from 'moment';
 
 
 function isNewDeployment(deployment) {
     const deploymentCreatedAt = moment(deployment.createdAt);
-    const interval = moment().subtract(SERVICE_REFRESH_INTERVAL + 5, 'seconds');
-    return deploymentCreatedAt.isSameOrAfter(interval);
+    const bufferInterval = moment().subtract(config.SERVICE_REFRESH_INTERVAL, 'seconds');
+    return deploymentCreatedAt.isAfter(bufferInterval);
 }
 
 export class Event {
@@ -19,7 +19,6 @@ export class Event {
 
 export const fullScreenEvent$ = new Subject();
 export const progressBarEvent$ = new Subject();
-
 export const newDeploymentEvent$ =
     aggregatedServiceDeploymentStream$(5)
     .flatMap(deployments => deployments)
