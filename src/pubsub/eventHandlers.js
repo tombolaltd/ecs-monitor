@@ -1,5 +1,5 @@
 import NProgress from 'nprogress';
-import { progressBarEvent$ } from './eventStreams';
+import { progressBarEvent$, newDeploymentEvent$ } from './eventStreams';
 
 const handlers = [];
 
@@ -11,9 +11,19 @@ function progressBarHandler(evt) {
     }
 }
 
+function deploymentHandler(evt) {
+    if (evt.data.message.indexOf('started') !== -1) {
+        window.Materialize.toast(`DEPLOYMENT OF ${evt.data.deployment.serviceName} STARTED`, 10000);
+    }
+}
+
+
+
+
 // subscribe and capture the observer for unsubscription
 export function attachAllPageEventHandlers() {
     handlers.push(progressBarEvent$.subscribe(progressBarHandler));
+    handlers.push(newDeploymentEvent$.subscribe(deploymentHandler));
 }
 
 export function detachAllPageEventHandlers() {
