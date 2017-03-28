@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import config from '../config';
 import awsRequest from '../awsRequest';
 import { streamRetryFn } from './common';
@@ -26,7 +26,8 @@ export const clusterArnStream$ =
   Observable.timer(0, config.CLUSTER_ARN_REFRESH_INTERVAL * 60000) // timer in minutes
   .flatMap(() => getClusterArns())
   .retryWhen(streamRetryFn(3000))
-  .share();
+  .multicast(() => new ReplaySubject(1))
+  .refCount();
 
 // emits cluster updates
 export const clusterStream$ =
@@ -35,4 +36,5 @@ export const clusterStream$ =
         .flatMap(([_, clusterArnsResponse]) => getDescribedClusters(clusterArnsResponse.clusterArns))
         .retryWhen(streamRetryFn(3000))
         .map(x => x.clusters)
-        .share();
+        .multicast(() => new ReplaySubject(1))
+        .refCount();

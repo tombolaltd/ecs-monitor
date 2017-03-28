@@ -25,7 +25,7 @@ function deploymentHandler(evt) {
 // subscribe and capture the observer for unsubscription
 export function attachAllPageEventHandlers() {
     handlers.push(progressBarEvent$.subscribe(progressBarHandler));
-    //handlers.push(newDeploymentEvent$.subscribe(deploymentHandler));
+    handlers.push(newDeploymentEvent$.subscribe(deploymentHandler));
 }
 
 export function detachAllPageEventHandlers() {

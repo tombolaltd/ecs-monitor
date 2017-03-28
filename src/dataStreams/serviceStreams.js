@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import config from '../config';
 import awsRequest from '../awsRequest';
 import { streamRetryFn } from './common';
@@ -43,7 +43,8 @@ export const serviceArnStream$ =
   // ensure we remove any cluster from the stream which dont contain any services.
   .map(results => results.filter(x => x.serviceArns.length !== 0))
   .retryWhen(streamRetryFn(3000))
-  .share();
+  .multicast(() => new ReplaySubject(1))
+  .refCount();
 
 // Emits service updates
 // THIS HAS A 10 SERVICES PER CLUSTER LIMITATION (this is a limitation on the aws request)
@@ -59,7 +60,8 @@ export const servicesStream$ =
     })
     .map(x => x.reduce((acc, y) => acc.concat(y.services), []))
     .retryWhen(streamRetryFn(3000))
-    .share();
+    .multicast(() => new ReplaySubject(1))
+    .refCount();
 
 // Emits service updates for a particular cluster
 // THIS HAS A 10 SERVICES PER CLUSTER LIMITATION (this is a limitation on the aws request)
@@ -84,7 +86,8 @@ export function aggregatedServiceDeploymentStream$(deploymentCount) {
         return cachedObs$;
     }
 
-    const obs$ = servicesStream$
+    const obs$ = 
+        servicesStream$
         .map(services => {
             return services
                 .reduce((acc, x) => acc.concat(x.deployments), [])
