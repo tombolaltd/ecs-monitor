@@ -20,7 +20,7 @@ function statusClassName(value) {
 class MetricStat extends Component {
     constructor(props) {
         super(props);
-        this.elementId = `${this.props._key}-${this.props.title}-metric`;
+        this.elementId = `${this.props._key}-metric`;
         this.state = {
             value: 0
         };
@@ -43,9 +43,11 @@ class MetricStat extends Component {
         });
         this.countUp.update(actualValue);
 
-        if (this.props.alertPredicate(actualValue) &&
-            typeof this.props.alertHandler === 'function') {
-                this.props.alertHandler(actualValue);
+        if (typeof this.props.alertPredicate === 'function'
+            && this.props.alertPredicate(actualValue)
+            && typeof this.props.alertHandler === 'function') 
+        {
+            this.props.alertHandler(actualValue);
         }
     }
 
@@ -72,7 +74,6 @@ class MetricStat extends Component {
 
         return (
             <div className="metricstat">
-                <small className="title">{this.props.title}</small>
                 <strong className={numberClassName} id={this.elementId}></strong>
             </div>
         );
@@ -81,7 +82,6 @@ class MetricStat extends Component {
 
 MetricStat.propTypes = {
     _key: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
     stream: PropTypes.instanceOf(Observable).isRequired,
     alertPredicate: PropTypes.func,
     alertHandler: PropTypes.func

@@ -3,6 +3,7 @@ import PageDescription from '../pageDescription/pageDescriptionComponent';
 import ServiceTaskOverview from './serviceTaskOverviewComponent/serviceTaskOverviewComponent';
 import Deployments from './deploymentsComponent/deploymentsComponent';
 import AggregatedServiceEvents from './aggregatedEventsComponent/aggregatedEventsComponent';
+import ServiceMetrics from './metrics/serviceMetricsComponent';
 import TaskChurn from './taskChurnComponent/taskChurnComponent';
 import { servicesStream$ } from '../../dataStreams/serviceStreams';
 import moment from 'moment';
@@ -46,6 +47,11 @@ class ServiceSummaryDashboard extends Component {
                     <div className="col s4"><ServiceTaskOverview /></div>
                     <div className="col s5"><Deployments /></div>
                     <div className="col s3"><TaskChurn /></div>
+                </div>
+                <div className="row">
+                    <div className="col s4">
+                        <ServiceMetrics />
+                    </div>
                 </div>
                 <AggregatedServiceEvents />
             </div>

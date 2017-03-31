@@ -1,6 +1,6 @@
 import NProgress from 'nprogress';
 import { progressBarEvent$, newDeploymentEvent$ } from './eventStreams';
-import { formatTaskDefinitionString } from '../utils/stringFormatting';
+import { nameFromAwsArn } from '../utils/stringFormatting';
 
 const handlers = [];
 
@@ -14,7 +14,7 @@ function progressBarHandler(evt) {
 
 function deploymentHandler(evt) {
     if (evt.data.message.indexOf('started') !== -1) {
-        const taskDefinitionName = formatTaskDefinitionString(evt.data.deployment.taskDefinition);
+        const taskDefinitionName = nameFromAwsArn(evt.data.deployment.taskDefinition);
         window.Materialize.toast(`DEPLOYMENT OF ${taskDefinitionName} STARTED`, 10000);
     }
 }

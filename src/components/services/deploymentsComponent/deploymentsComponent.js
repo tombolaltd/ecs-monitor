@@ -3,7 +3,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { loadingBar } from '../../loading';
 import moment from 'moment';
 import { aggregatedServiceDeploymentStream$ } from '../../../dataStreams/serviceStreams';
-import { formatTaskDefinitionString } from '../../../utils/stringFormatting';
+import { nameFromAwsArn } from '../../../utils/stringFormatting';
 import './deploymentsComponent.css';
 
 
@@ -13,7 +13,7 @@ function buildListItem(deployment) {
             <td>{moment(deployment.createdAt).fromNow()}</td>
             <td className="count">{deployment.desiredCount}</td>
             <td className="count">{deployment.pendingCount}</td>
-            <td>{formatTaskDefinitionString(deployment.taskDefinition)}</td>
+            <td>{nameFromAwsArn(deployment.taskDefinition)}</td>
         </tr>
     );
 }

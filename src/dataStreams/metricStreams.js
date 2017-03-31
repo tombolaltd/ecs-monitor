@@ -7,14 +7,20 @@ import moment from 'moment';
 const _statStreamCache = {};
 const _metricStreamCache = {};
 
+function buildCacheKey(dimensionsArray, metricName) {
+    let key = '';
+    for (let i=0; i < dimensionsArray.length; i++) {
+        key += dimensionsArray[i].Value;
+    }
+    key += metricName;
+    return key;
+}
 
-function cloudwatchClusterMetricStatisticsRequest(clusterName, metricName, fromMinutes, period, to) {
+function cloudwatchMetricStatisticsRequest(dimensions, metricName, fromMinutes, period, to) {
     const params = {
         Namespace: 'AWS/ECS',
         MetricName: metricName,
-        Dimensions: [
-            { Name:'ClusterName', Value: clusterName },
-        ],
+        Dimensions: dimensions,
         StartTime: moment().subtract(fromMinutes, 'minutes').toDate(),
         EndTime: to,
         Period: period, // seconds
@@ -26,14 +32,14 @@ function cloudwatchClusterMetricStatisticsRequest(clusterName, metricName, fromM
     });
 }
 
-export function metricsStream$(clusterName, metricName) {
-    const cacheKey = clusterName + metricName;
+export function metricsStream$(dimensions, metricName) {
+    const cacheKey = buildCacheKey(dimensions, metricName);
     const cachedObs = _metricStreamCache[cacheKey];
     if (cachedObs) {
         return cachedObs;
     }
 
-    const obs$ = Observable.from(cloudwatchClusterMetricStatisticsRequest(clusterName, metricName, 30, 60, moment().toDate()))
+    const obs$ = Observable.from(cloudwatchMetricStatisticsRequest(dimensions, metricName, 30, 60, moment().toDate()))
         .map(x => { 
             if (x.Datapoints.length === 0) {
                 return [];
@@ -48,8 +54,8 @@ export function metricsStream$(clusterName, metricName) {
     return obs$;
 }
 
-export function metricStatStream$(clusterName, metricName) {
-    const cacheKey = clusterName + metricName;
+export function metricStatStream$(dimensions, metricName) {
+    const cacheKey = buildCacheKey(dimensions, metricName);
     const cachedObs = _statStreamCache[cacheKey];
     if (cachedObs) {
         return cachedObs;
@@ -59,7 +65,7 @@ export function metricStatStream$(clusterName, metricName) {
     // cloudwatch only lets you define periods which are multiples of 60
     // so this is the shortest we can do without wasting requests
     const obs$ = Observable.timer(0, 60 * 1000)
-        .switchMap(() => metricsStream$(clusterName, metricName))
+        .switchMap(() => metricsStream$(dimensions, metricName))
         .map(metrics => metrics[metrics.length-1]);
 
     _statStreamCache[cacheKey] = obs$;

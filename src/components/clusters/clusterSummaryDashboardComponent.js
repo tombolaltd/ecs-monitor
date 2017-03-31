@@ -21,8 +21,11 @@ function mapToClusterName(cluster) {
 
 function mapClusterToMetrics(cluster, i) {
         const clusterName = cluster.clusterName;
-        const cpuDataStream$ = metricsStream$(clusterName, "CPUUtilization");
-        const memoryDataStream$ = metricsStream$(clusterName, "MemoryUtilization");
+        const dimensions = [
+            { Name: 'ClusterName', Value: clusterName}
+        ];
+        const cpuDataStream$ = metricsStream$(dimensions, "CPUUtilization");
+        const memoryDataStream$ = metricsStream$(dimensions, "MemoryUtilization");
         return (
             <li key={clusterName + '-graphMetric' + i} style={inlineBlock}>
                 <Graph memoryStream={memoryDataStream$} cpuStream={cpuDataStream$} label={clusterName}/>

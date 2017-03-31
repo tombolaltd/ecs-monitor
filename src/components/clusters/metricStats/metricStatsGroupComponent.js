@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import MetricStat from './metricStatComponent';
+import MetricStat from '../../metrics/metricStatComponent';
 import { metricStatStream$ } from '../../../dataStreams/metricStreams';
 import './metricStatsGroupComponent.css';
 
@@ -15,25 +15,28 @@ function isOver80PercentAlertHandler(clusterName, title) {
 
 class MetricStatGroup extends Component {
     clusterNameToMetricStatComponent(clusterName, i) {
+        const dimensions = [
+            { Name: 'ClusterName', Value: clusterName }
+        ];
         const cpuTitle = 'CPU Utilization';
         const memoryTitle = 'Memory Utilization';
-        const cpuStream$ = metricStatStream$(clusterName, 'CPUUtilization', 5000);
-        const memoryStream$ = metricStatStream$(clusterName, 'MemoryUtilization', 5000);
+        const cpuStream$ = metricStatStream$(dimensions, 'CPUUtilization', 5000);
+        const memoryStream$ = metricStatStream$(dimensions, 'MemoryUtilization', 5000);
         return (
             <div className="metric-stat-wrapper" key={clusterName + '-metric-' + i}>
                 <p className="clustername">{clusterName}</p>
                 <div className="cpu inline">
+                    <small className="title">{cpuTitle}</small>
                     <MetricStat 
-                        title={cpuTitle}
-                        _key={clusterName}
+                        _key={`${clusterName}-${cpuTitle}`}
                         stream={cpuStream$}
                         alertPredicate={isOver80PercentAlertPredicate}
                         alertHandler={isOver80PercentAlertHandler(clusterName, cpuTitle)} />
                 </div>
                 <div className="memory inline">
+                    <small className="title">{memoryTitle}</small>
                     <MetricStat
-                        title={memoryTitle}
-                        _key={clusterName}
+                        _key={`${clusterName}-${memoryTitle}`}
                         stream={memoryStream$}
                         alertPredicate={isOver80PercentAlertPredicate}
                         alertHandler={isOver80PercentAlertHandler(clusterName, memoryTitle)} />

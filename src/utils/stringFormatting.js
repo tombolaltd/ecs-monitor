@@ -1,4 +1,4 @@
-export function formatTaskDefinitionString(taskDefinition) {
-    let lastIndexOfSlash = taskDefinition.lastIndexOf('/');
-    return taskDefinition.substring(lastIndexOfSlash + 1);
+export function nameFromAwsArn(arn) {
+    const lastIndexOfSlash = arn.lastIndexOf('/');
+    return arn.substring(lastIndexOfSlash + 1);
 }
