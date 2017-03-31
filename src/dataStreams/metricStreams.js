@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { streamRetryFn } from './common';
 import awsRequest from '../awsRequest';
 import moment from 'moment';
@@ -39,7 +39,11 @@ export function metricsStream$(dimensions, metricName) {
         return cachedObs;
     }
 
-    const obs$ = Observable.from(cloudwatchMetricStatisticsRequest(dimensions, metricName, 30, 60, moment().toDate()))
+    // interval is 60 seconds.
+    // cloudwatch only lets you define periods which are multiples of 60
+    // so this is the shortest we can do without wasting requests
+    const obs$ = Observable.timer(0, 60 * 1000)
+        .flatMap(() => cloudwatchMetricStatisticsRequest(dimensions, metricName, 30, 60, moment().toDate()))
         .map(x => { 
             if (x.Datapoints.length === 0) {
                 return [];
@@ -48,7 +52,8 @@ export function metricsStream$(dimensions, metricName) {
         })
         .filter(x => x.length !== 0)
         .retryWhen(streamRetryFn(3000))
-        .share();
+        .multicast(() => new ReplaySubject(1))
+        .refCount();
 
     _metricStreamCache[cacheKey] = obs$;
     return obs$;
@@ -61,11 +66,8 @@ export function metricStatStream$(dimensions, metricName) {
         return cachedObs;
     }
 
-    // interval is 60 seconds.
-    // cloudwatch only lets you define periods which are multiples of 60
-    // so this is the shortest we can do without wasting requests
-    const obs$ = Observable.timer(0, 60 * 1000)
-        .switchMap(() => metricsStream$(dimensions, metricName))
+    const obs$ = 
+        metricsStream$(dimensions, metricName)
         .map(metrics => metrics[metrics.length-1]);
 
     _statStreamCache[cacheKey] = obs$;
