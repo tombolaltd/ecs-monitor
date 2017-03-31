@@ -12,3 +12,7 @@
     max-width: 2em;
     text-overflow: ellipsis;
 }
+
+.service-overview-entry .metricstat .number {
+    font-size: inherit;
+}
