@@ -87,7 +87,7 @@ class ServiceMetrics extends Component {
                         <tr>
                             <th>Service Name</th>
                             <th>CPU</th>
-                            <th>Mem</th>
+                            <th>Mem (res)</th>
                         </tr>
                     </thead>
                     <tbody>
