@@ -18,6 +18,7 @@ export class Event {
 }
 
 export const fullScreenEvent$ = new Subject();
+export const settingsEvent$ = new Subject();
 export const progressBarEvent$ = new Subject();
 export const newDeploymentEvent$ =
     aggregatedServiceDeploymentStream$(5)

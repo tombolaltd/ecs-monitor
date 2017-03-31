@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Header from './components/header/headerComponent';
 import Footer from './components/footer/footerComponent';
 import FloatingActionMenu from './components/menu/floatingActionMenuComponent';
+import SettingsModal from './components/settings/settingsModalComponent';
 import { fullScreenEvent$ } from './pubsub/eventStreams';
 import { attachAllPageEventHandlers, detachAllPageEventHandlers } from './pubsub/eventHandlers';
 
@@ -52,7 +53,9 @@ class App extends Component {
           </div>
         </div>
         <Footer />
+
         <FloatingActionMenu />
+        <SettingsModal modalId="primary-settings-modal" />
       </div>
     );
   }

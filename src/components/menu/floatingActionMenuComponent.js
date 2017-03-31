@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import { Event, fullScreenEvent$ } from '../../pubsub/eventStreams';
+import { Event, fullScreenEvent$, settingsEvent$ } from '../../pubsub/eventStreams';
 
 class FloatingActionMenu extends Component {
     constructor(props) {
         super(props);
         this.handleFullScreenClick = this.handleFullScreenClick.bind(this);
+        this.handleSettingsClick = this.handleSettingsClick.bind(this);
+    }
+
+    handleSettingsClick(evt) {
+        settingsEvent$.next(new Event(this, 'open'));
     }
 
     handleFullScreenClick(evt) {
@@ -18,6 +23,11 @@ class FloatingActionMenu extends Component {
                     <i className="large material-icons">mode_edit</i>
                 </a>
                 <ul>
+                    <li>
+                        <a className="btn-floating green" onClick={this.handleSettingsClick}>
+                            <i className="material-icons">settings</i>
+                        </a>
+                    </li>
                     <li>
                         <a className="btn-floating blue lighten-1" onClick={this.handleFullScreenClick}>
                             <i className="material-icons">aspect_ratio</i>
