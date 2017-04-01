@@ -49,7 +49,10 @@ function getAwsConfig() {
                 
                 return resolve(new AWS.Config({
                     region: AWS_REGION,
-                    credentials: credentials
+                    credentials: credentials,
+                    httpOptions: {
+                        timeout: 5000 // milliseconds
+                    }
                 }));
             }).catch(reject);
         }
