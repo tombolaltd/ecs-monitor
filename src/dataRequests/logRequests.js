@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
 import awsRequest from '../awsRequest';
+import { currentLogGroup } from '../utils/localStorage';
 
 function describeLogStreamsRequest(prefix, nextToken) {
     const orderBy = prefix ? 'LogStreamName' : 'LastEventTime' ;
@@ -8,7 +9,7 @@ function describeLogStreamsRequest(prefix, nextToken) {
     return function(awsConfig) {
         const cwLogs = new AWS.CloudWatchLogs(awsConfig);    
         return cwLogs.describeLogStreams({
-            logGroupName: 'ecs', // todo: pass this in...
+            logGroupName: currentLogGroup(),
             nextToken: nextToken,
             logStreamNamePrefix: prefix,
             orderBy: orderBy,
@@ -22,7 +23,7 @@ function getLogEventsByName(logStreamName, nextToken) {
     return function(awsConfig) {
         const cwLogs = new AWS.CloudWatchLogs(awsConfig);
         return cwLogs.getLogEvents({
-            logGroupName: 'ecs', // todo: pass this in...
+            logGroupName: currentLogGroup(),
             logStreamName: logStreamName,
             startFromHead: true,
             nextToken: nextToken
