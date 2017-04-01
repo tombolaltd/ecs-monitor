@@ -1,8 +1,8 @@
-# ECS monitoring tool
+# ECS monitor
 
 A simple monitoring solution which gives you insight into your EC2 Container Service (ECS) clusters, services and container logs. The main focus around this application is to aggregate cluster and service stats so that they can be monitored in one place, without having to click around - Making it useful to put on a [telley](http://www.urbandictionary.com/define.php?term=Telley) for the team. 
 
-As well as aggregation, ECS monitoring tool also offers various features over and above the Amazon Console - Such as _Task churn_, which detects when a service is misbehaving by rapidly starting and stopping tasks.
+As well as aggregation, ECS monitor also offers various features over and above the Amazon Console - Such as _Task churn_, which detects when a service is misbehaving by rapidly starting and stopping tasks.
 
 <img src="https://cdn.worldvectorlogo.com/logos/react.svg" height="50" title="react" alt="react" /><img src="https://avatars3.githubusercontent.com/u/984368?v=3&s=100" height="50" title="rxjs" alt="rxjs" /><img src="https://camo.githubusercontent.com/a6ee039214392d86e038c5d601f55ec60310d03c/68747470733a2f2f63646e2e7261776769742e636f6d2f7072706c782f7376672d6c6f676f732f6d61737465722f7376672f6d6174657269616c697a652e737667" height="47" title="materializecss" alt="materializecss" />
 
@@ -13,7 +13,7 @@ As well as aggregation, ECS monitoring tool also offers various features over an
 #### development
 
 To run the app in development, first you need to create a file in the app root directory called devCredentials.json. This is to supply the app with aws credentials. The file won't be source controlled.
-It's a single object with 2 properties;
+It's a single object with 2 properties:
 
 ```
 {
@@ -49,11 +49,11 @@ In order for the server to do this you need to set **2 environment variables:**
 #### docker
 
 ```
-$ docker build -t ecs-monitoring-tool {checkout_dir}
+$ docker build -t ecs-monitor {checkout_dir}
 $ docker run -p 1337:1337 --rm \
     -e AWS_ACCESS_KEY_ID=... \
     -e AWS_SECRET_ACCESS_KEY=... \
-    ecs-monitoring-tool
+    ecs-monitor
 ```
 
 ----
