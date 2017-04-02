@@ -55,7 +55,7 @@ class App extends Component {
         <Footer />
 
         <FloatingActionMenu />
-        <SettingsModal modalId="primary-settings-modal" />
+        <SettingsModal />
       </div>
     );
   }

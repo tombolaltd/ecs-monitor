@@ -5,11 +5,6 @@ class FloatingActionMenu extends Component {
     constructor(props) {
         super(props);
         this.handleFullScreenClick = this.handleFullScreenClick.bind(this);
-        this.handleSettingsClick = this.handleSettingsClick.bind(this);
-    }
-
-    handleSettingsClick(evt) {
-        settingsEvent$.next(new Event(this, 'open'));
     }
 
     handleFullScreenClick(evt) {
@@ -24,7 +19,7 @@ class FloatingActionMenu extends Component {
                 </a>
                 <ul>
                     <li>
-                        <a className="btn-floating green" onClick={this.handleSettingsClick}>
+                        <a className="btn-floating green settings-modal-trigger" data-target="primary-settings-modal" href="#primary-settings-modal">
                             <i className="material-icons">settings</i>
                         </a>
                     </li>

@@ -1,10 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 
+const modalId = 'primary-settings-modal';
 
-class SettingsModal extends Component {
+class SettingsModal extends Component {    
+    componentDidMount() {
+        window.$(`#${modalId}`).modal();
+    }
+    
     render() {
         return (
-            <div id={this.props.modalId} className="modal modal-fixed-footer">
+            <div id={modalId} className="modal modal-fixed-footer">
                 <div className="modal-content">
                     <h4>Settings</h4>
                     <p>settings here...</p>
@@ -15,11 +20,6 @@ class SettingsModal extends Component {
             </div>
         );
     }
-}
-
-
-SettingsModal.propTypes = {
-    modalId: PropTypes.string.isRequired
 }
 
 export default SettingsModal;
