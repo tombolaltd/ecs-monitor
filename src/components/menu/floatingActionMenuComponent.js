@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Event, fullScreenEvent$, settingsEvent$ } from '../../pubsub/eventStreams';
+import { Event, fullScreenEvent$ } from '../../pubsub/eventStreams';
 
 class FloatingActionMenu extends Component {
     constructor(props) {

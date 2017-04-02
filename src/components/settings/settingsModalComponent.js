@@ -7,9 +7,10 @@ const modalId = 'primary-settings-modal';
 class SettingsModal extends Component {    
     constructor(props) {
         super(props);
-
+        const settings = currentSettings();
+        
         this.state = {
-            logGroup: 'ecs'
+            logGroup: settings.logGroup
         };
 
         this.updateProperty = this.updateProperty.bind(this);

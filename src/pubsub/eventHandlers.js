@@ -1,21 +1,8 @@
 import NProgress from 'nprogress';
 import { nameFromAwsArn } from '../utils/stringFormatting';
-import { progressBarEvent$, newDeploymentEvent$, settingsEvent$ } from './eventStreams';
+import { progressBarEvent$, newDeploymentEvent$ } from './eventStreams';
 
 const handlers = [];
-
-function settingsModalHandler(evt) {
-    console.log(evt);
-    if (evt.data === 'open') {
-        // open settings modal
-        const modal = window.$('#primary-settings-modal');
-        console.log(modal);
-        window.$('#primary-settings-modal').modal();
-    } else {
-        // close
-        window.$('#primary-settings-modal').modal();
-    }
-}
 
 function progressBarHandler(evt) {
     if (evt.data === 'start') {
@@ -39,7 +26,6 @@ function deploymentHandler(evt) {
 export function attachAllPageEventHandlers() {
     handlers.push(progressBarEvent$.subscribe(progressBarHandler));
     handlers.push(newDeploymentEvent$.subscribe(deploymentHandler));
-    handlers.push(settingsEvent$.subscribe(settingsModalHandler));
 }
 
 export function detachAllPageEventHandlers() {
