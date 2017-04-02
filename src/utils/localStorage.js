@@ -1,14 +1,29 @@
 import config from '../config';
 
 const keys = {
-    LOG_GROUP: 'logs-loggroup'
+    SETTINGS: 'settings'
 };
 
+export class Settings {
+    constructor(logGroup) {
+        this.logGroup = logGroup;
+    }
+}
 
 export function currentLogGroup() {
-    const existingEntry = window.localStorage.getItem(keys.LOG_GROUP)
-    if (existingEntry) {
-        return existingEntry;
+    return currentSettings().logGroup;
+}
+
+export function currentSettings() {
+    const existingSettings = window.localStorage.getItem(keys.SETTINGS);
+    if (existingSettings) {
+        return JSON.parse(existingSettings);
     }
-    return config.DEFAULT_LOG_GROUP;
+
+    saveSettings(config.DEFAULT_SETTINGS);
+    return config.DEFAULT_SETTINGS;
+}
+
+export function saveSettings(settings) {
+    window.localStorage.setItem(keys.SETTINGS, JSON.stringify(settings));
 }

@@ -81,6 +81,8 @@ export default {
     TASK_CHURN_DETECTION_BUFFER_COUNT: 3,
     TASK_CHURN_DETECTION_TIME_THRESHOLD: 10, // minutes
     DEFAULT_STATS_REFRESH_INTERVAL: 10, // seconds
-    DEFAULT_LOG_GROUP: 'ecs',
+    DEFAULT_SETTINGS: {
+        logGroup: 'ecs'
+    },
     getAwsConfig
 };
