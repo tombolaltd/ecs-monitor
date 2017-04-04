@@ -4,6 +4,7 @@ import config from '../config';
 import awsRequest from '../awsRequest';
 import { streamRetryFn } from './common';
 import { clusterArnStream$ } from './clusterStreams';
+import { chunk, flatten } from '../utils/array';
 
 const _serviceStreamCache = {};
 
@@ -47,36 +48,36 @@ export const serviceArnStream$ =
   .refCount();
 
 // Emits service updates
-// THIS HAS A 10 SERVICES PER CLUSTER LIMITATION (this is a limitation on the aws request)
-// Improvement: split the cluster.serviceArns into groups of 10 maximum and make a describe services request for each.
 export const servicesStream$ = 
     Observable.timer(0, config.SERVICE_REFRESH_INTERVAL * 1000) // timer in seconds
     .combineLatest(serviceArnStream$)
     .flatMap(([_, clusters]) => {
-        // foreach cluster object - { clusterArn:string, serviceArns:string[] }
-        // run a describe services request for each cluster
-        const requestPromises = clusters.map(cluster => getDescribedServices(cluster.serviceArns, cluster.clusterArn));
+        /* foreach cluster object - { clusterArn:string, serviceArns:string[] }
+         * run a describe services request for each cluster
+         * If there are more than 10 services in the cluster, we need to split it into multiple requests
+         * This is an AWS API limitation
+         */
+        const requestPromises = clusters.map(cluster => {
+            if (cluster.serviceArns.length > 10) {
+                const serviceArnsInChunks = chunk(cluster.serviceArns, 10);
+                const describeRequestPromises = serviceArnsInChunks.map(
+                    (serviceArns) => getDescribedServices(serviceArns, cluster.clusterArn));
+
+                return Promise.all(describeRequestPromises);
+            } else {
+                return getDescribedServices(cluster.serviceArns, cluster.clusterArn);
+            }
+        })
+
         return Observable.zip(...requestPromises);
     })
-    .map(x => x.reduce((acc, y) => acc.concat(y.services), []))
+    .map(x => {
+        // we want to flatten/concat any arrays inside x first so we can run a reduce over it.
+        return flatten(x).reduce((acc, y) => acc.concat(y.services), []) 
+    })
     .retryWhen(streamRetryFn(3000))
     .multicast(() => new ReplaySubject(1))
     .refCount();
-
-// Emits service updates for a particular cluster
-// THIS HAS A 10 SERVICES PER CLUSTER LIMITATION (this is a limitation on the aws request)
-// Improvement: split the cluster.serviceArns into groups of 10 maximum and make a describe services request for each.
-// Note: Case sensitive clusterName
-export function serviceStreamForCluster$(clusterName) {
-    return Observable.timer(0, config.SERVICE_REFRESH_INTERVAL * 1000) // timer in seconds
-            .combineLatest(serviceArnStream$)
-            .map(([_, serviceArnsGroupedByCluster]) =>
-                serviceArnsGroupedByCluster.find(x => x.clusterArn.indexOf(clusterName) !== -1))
-            .flatMap(({serviceArns}) => getDescribedServices(serviceArns, clusterName))
-            .retryWhen(streamRetryFn(3000))
-            .map(x => x.services)
-            .share();
-}
 
 // Deployment component stream
 export function aggregatedServiceDeploymentStream$(deploymentCount) {
