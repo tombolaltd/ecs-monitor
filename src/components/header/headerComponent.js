@@ -10,6 +10,7 @@ import './headerComponent.css';
 const homePagePath = MOUNTING_PATH;
 const servicePagePath = MOUNTING_PATH + 'services';
 const clusterPagePath = MOUNTING_PATH + 'clusters';
+const agentsPagePath = MOUNTING_PATH + 'agents';
 const logsPagePath = MOUNTING_PATH + 'logs';
 
 
@@ -35,6 +36,9 @@ class Header extends Component {
                         </li>
                         <li className={this.processActiveClassName(clusterPagePath)}>
                             <Link to={clusterPagePath}>Clusters</Link>
+                        </li>
+                        <li className={this.processActiveClassName(agentsPagePath)}>
+                            <Link to={agentsPagePath}>Agents</Link>
                         </li>
                         <li className={this.processActiveClassName(logsPagePath)}>
                             <Link to={logsPagePath}>Logs</Link>

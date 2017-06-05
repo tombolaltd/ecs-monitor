@@ -5,6 +5,7 @@ import { MOUNTING_PATH } from '../globalConfig';
 import App from './app';
 import ServicesDashboard from './components/services/serviceSummaryDashboardComponent';
 import ClustersDashboard from './components/clusters/clusterSummaryDashboardComponent';
+import AgentsDashboard from './components/agents/agentSummaryDashboardComponent';
 import LogsDashboard from './components/logs/logsDashboard/logsDashboardComponent';
 import './index.css';
 
@@ -21,6 +22,7 @@ ReactDOM.render((
       <IndexRedirect to="services" />
       <Route path="services" components={{body: ServicesDashboard}} />
       <Route path="clusters" components={{body: ClustersDashboard}} />
+      <Route path="agents" components={{body: AgentsDashboard}} />
       <Route path="logs" components={{body: LogsDashboard}} />
     </Route>
   </Router>
