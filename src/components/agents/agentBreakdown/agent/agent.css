@@ -1,0 +1,36 @@
+.agent .task {
+    color:white;
+    padding:0.1em 1em;
+    font-size:1em;
+}
+
+.task .status-icon {
+    width:1.25em;
+    height:1.25em;
+    display: block;
+    border-radius: 50%;
+}
+
+.task .status-icon.running {
+    background-color: lightgreen;
+}
+
+.task .status-icon.pending {
+    background-color: orange;
+    animation: blink-animation 1s steps(5, start) infinite;
+}
+
+.task .status-icon.stopped {
+    background-color: darkred;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}

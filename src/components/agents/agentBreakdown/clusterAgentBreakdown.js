@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Rx from 'rxjs';
-import Agent from './agent';
+import Agent from './agent/agent';
 import { containerInstancesStream } from '../../../dataStreams/ec2Streams';
 import { tasksStream } from '../../../dataStreams/taskStreams';
 
@@ -21,13 +21,12 @@ class ClusterAgentBreakdown extends Component {
         this.state = {
             data: []
         };
+
+        //  bind functions
         this.updateState = this.updateState.bind(this);
+        this.renderAgentComponent = this.renderAgentComponent.bind(this);
     }
     
-    getColour(taskDefinitionArn) {
-        return this.props.taskDefinitionColours[taskDefinitionArn];
-    }
-
     updateState(newState) {
         this.setState({
             data: newState
@@ -42,19 +41,24 @@ class ClusterAgentBreakdown extends Component {
                 (containerInstances, tasks) => {
                     return containerInstances.map(mapContainerInstanceGroup(tasks))
                 }
-            ).do(console.log.bind(console)).subscribe(this.updateState);
+            ).subscribe(this.updateState);
     }
 
     componentWillUnmount() {
         this.tasksDataObservable.unsubscribe();
     }
     
+    renderAgentComponent(entry) {
+        return (
+            <Agent 
+                agentDetails={entry}
+                key={entry.instance.ec2InstanceId}
+                taskDefinitionColours={this.props.taskDefinitionColours} />
+        );
+    }
+
     render() {
-        const agents = this.state.data.map((entry) => {
-            return (
-                <Agent agentDetails={entry} key={entry.instance.ec2InstanceId} />
-            );
-        });
+        const agents = this.state.data.map(this.renderAgentComponent);
         return (
             <div>
                 <h3>{this.props.clusterName} cluster</h3>

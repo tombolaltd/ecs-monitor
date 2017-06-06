@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import { Observable, ReplaySubject } from 'rxjs';
-//import config from '../config';
+import config from '../config';
 import awsRequest from '../awsRequest';
 import { streamRetryFn } from './common';
 
@@ -40,7 +40,7 @@ export function tasksStream(cluster) {
         return _tasksStreamCache[cacheKey];
     }
     
-    const obs$ = Observable.timer(0, 10 * 1000) // timer in seconds
+    const obs$ = Observable.timer(0, config.TASK_STREAM_REFRESH_INTERVAL * 1000) // timer in seconds
         .flatMap(() => {
             const listTasks = getTaskArnsForCluster(cluster);
             return listTasks.then(describeTasksFn(cluster));

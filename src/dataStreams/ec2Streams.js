@@ -3,7 +3,6 @@ import { Observable, ReplaySubject } from 'rxjs';
 import config from '../config';
 import awsRequest from '../awsRequest';
 import { streamRetryFn } from './common';
-import { clusterArnStream$ } from './clusterStreams';
 
 
 const _containerInstancesStreamCache = {};
@@ -36,7 +35,7 @@ export function containerInstancesStream(cluster) {
         return _containerInstancesStreamCache[cacheKey];
     }
     
-    const obs$ = Observable.timer(0, 30 * 1000) // timer in seconds
+    const obs$ = Observable.timer(0, config.CONTAINER_INSTANCES_REFRESH_INTERVAL * 1000) // timer in seconds
         .flatMap(() => {
             const containerInstances = getContainerInstanceArns(cluster);
             return containerInstances.then(({containerInstanceArns}) =>
