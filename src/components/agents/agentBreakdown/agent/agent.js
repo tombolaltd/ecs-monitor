@@ -16,9 +16,10 @@ class Agent extends Component {
         const style = {
             backgroundColor: this.getColour(task.taskDefinitionArn)
         };
+        const lastStatus = task.lastStatus.toLowerCase();
         return (
-            <li className="task card-panel" key={task.taskArn} style={style}>
-                <i className={`status-icon ${task.lastStatus.toLowerCase()}`}></i>
+            <li className={`task card-panel ${lastStatus}`} key={task.taskArn} style={style}>
+                <i className="status-icon"></i>
                 <p className="task-definition">{nameFromAwsArn(task.taskDefinitionArn)}</p>
             </li>
         );

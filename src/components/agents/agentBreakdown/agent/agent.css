@@ -19,16 +19,16 @@
     margin-right: 1em;
 }
 
-.task .status-icon.running {
+.task.running .status-icon {
     background-color: lightgreen;
 }
 
-.task .status-icon.pending {
+.task.pending .status-icon {
     background-color: orange;
     animation: blink-animation 1s steps(5, start) infinite;
 }
 
-.task .status-icon.stopped {
+.task.stopped .status-icon {
     background-color: darkred;
 }
 
