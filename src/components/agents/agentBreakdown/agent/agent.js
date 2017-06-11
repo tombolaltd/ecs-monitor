@@ -13,14 +13,13 @@ class Agent extends Component {
     }
     
     renderTaskListEntry(task) {
-        console.log(task);
         const style = {
             backgroundColor: this.getColour(task.taskDefinitionArn)
         };
         return (
-            <li className="task" key={task.taskArn} style={style}>
+            <li className="task card-panel" key={task.taskArn} style={style}>
                 <i className={`status-icon ${task.lastStatus.toLowerCase()}`}></i>
-                <p>{nameFromAwsArn(task.taskDefinitionArn)}</p>
+                <p className="task-definition">{nameFromAwsArn(task.taskDefinitionArn)}</p>
             </li>
         );
     }
@@ -30,8 +29,11 @@ class Agent extends Component {
         const taskListItems = details.tasks.map(this.renderTaskListEntry, this);
         return (
             <div className="agent col">
-                <strong>{details.instance.ec2InstanceId}</strong>
-                <em>{details.tasks.length} tasks</em>
+                <div>
+                    <i className="small material-icons">perm_identity</i>
+                    <strong>{details.instance.ec2InstanceId}</strong>
+                </div>
+                <p>{details.tasks.length} tasks</p>
                 <hr />
                 <ul>
                     {taskListItems}

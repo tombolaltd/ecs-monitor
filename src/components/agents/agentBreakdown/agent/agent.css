@@ -2,13 +2,21 @@
     color:white;
     padding:0.1em 1em;
     font-size:1em;
+    margin-bottom: 0.5em;
+}
+
+.task .task-definition {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .task .status-icon {
     width:1.25em;
     height:1.25em;
-    display: block;
+    display: inline-block;
     border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 1em;
 }
 
 .task .status-icon.running {

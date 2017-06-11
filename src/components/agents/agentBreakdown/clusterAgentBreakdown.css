@@ -1,0 +1,11 @@
+.cluster-info-header > * {
+    display: inline-block;
+}
+
+.cluster-info-header .header {
+    margin-right: 0.75em;
+}
+
+.cluster-info-header .stats {
+    text-transform: uppercase;
+}
