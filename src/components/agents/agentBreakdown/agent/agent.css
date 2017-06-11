@@ -32,6 +32,17 @@
     background-color: darkred;
 }
 
+.agent-info .agent-icon,
+.agent-info .instanceid {
+    vertical-align: middle;
+}
+
+.agent .task-count {
+    display: block;
+    margin: 0.25em 0;
+    text-align: right;
+}
+
 @keyframes blink-animation {
   to {
     visibility: hidden;

@@ -29,11 +29,11 @@ class Agent extends Component {
         const taskListItems = details.tasks.map(this.renderTaskListEntry, this);
         return (
             <div className="agent col">
-                <div>
-                    <i className="small material-icons">perm_identity</i>
-                    <strong>{details.instance.ec2InstanceId}</strong>
+                <div className="agent-info">
+                    <i className="agent-icon small material-icons">perm_identity</i>
+                    <strong className="instanceid">{details.instance.ec2InstanceId}</strong>
                 </div>
-                <p>{details.tasks.length} tasks</p>
+                <em className="task-count">{details.tasks.length} tasks</em>
                 <hr />
                 <ul>
                     {taskListItems}
