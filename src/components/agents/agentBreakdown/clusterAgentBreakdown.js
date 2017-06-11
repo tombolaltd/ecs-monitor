@@ -76,13 +76,16 @@ class ClusterAgentBreakdown extends Component {
     }
 
     render() {
+        const activeClass = this.props.runningTasksCount < 1 
+            ? 'inactive'
+            : '';
         const agents = this.state.data.map(this.renderAgentComponent);
         return (
-            <div className="cluster">
+            <div className={`cluster ${activeClass}`}>
                 <div className="cluster-info-header">
                     <h3 className="header">{this.props.clusterName} cluster</h3>
                     <strong className="stats">
-                        {this.state.data.length} connected agents | running {this.taskCount(this.state.data)} tasks
+                        {this.props.agentCount} connected agents | running {this.props.runningTasksCount} tasks
                     </strong>
                 </div>
                 <div className="agents-collection row">
@@ -95,6 +98,8 @@ class ClusterAgentBreakdown extends Component {
 
 ClusterAgentBreakdown.propTypes = {
     clusterName: PropTypes.string.isRequired,
+    agentCount: PropTypes.number.isRequired,
+    runningTasksCount: PropTypes.number.isRequired,
     taskDefinitionColours: PropTypes.object.isRequired
 }
 

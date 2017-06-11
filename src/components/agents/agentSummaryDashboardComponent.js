@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PageDescription from '../pageDescription/pageDescriptionComponent';
 import ClusterAgentBreakdown from './agentBreakdown/clusterAgentBreakdown';
 import { taskDefinitionStream$ } from '../../dataStreams/taskDefinitionStreams';
+import { clusterStream$ } from '../../dataStreams/clusterStreams';
 import moment from 'moment';
 
 const taskDefColourCache = {};
@@ -40,26 +41,48 @@ class ClusterDashboard extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            lastUpdateStamp: stamp()
+            lastUpdateStamp: stamp(),
+            clusters: []
         };
+        this.updateClusterState = this.updateClusterState.bind(this);
+    }
+
+    updateClusterState(newState) {
+        this.setState({
+            clusters: newState,
+            lastUpdateStamp: stamp()
+        })
     }
 
     componentWillMount() {
         this.taskDefinitionObserver = 
             taskDefinitionStream$.subscribe(assignColoursToTaskDefinitions);
+        
+        this.clusterObserver = clusterStream$.subscribe(this.updateClusterState);
     }
 
     componentWillUnmount() {
         this.taskDefinitionObserver.unsubscribe();
     }
 
+    renderClusterAgentBreakdown(cluster) {
+        return (
+            <ClusterAgentBreakdown
+                key={`breakdown::${cluster.clusterName}`}
+                clusterName={cluster.clusterName} 
+                agentCount={cluster.registeredContainerInstancesCount}
+                runningTasksCount={cluster.runningTasksCount + cluster.pendingTasksCount}
+                taskDefinitionColours={taskDefColourCache} />
+        );
+    }
+
     render() {
+        const clusterBreakdownComponents = this.state.clusters.map(this.renderClusterAgentBreakdown);
         return (
             <div className="ec2-summary">
-                <PageDescription header={`X monitored agents`} lastUpdateStamp={this.state.lastUpdateStamp} />
-
-                {/* todo - FOREACH CLUSTER */}
-                <ClusterAgentBreakdown clusterName="default" taskDefinitionColours={taskDefColourCache} />
+                <PageDescription header={`${this.state.clusters.length} monitored clusters`} lastUpdateStamp={this.state.lastUpdateStamp} />
+                
+                {clusterBreakdownComponents}
             </div>
         );
     }

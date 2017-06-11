@@ -9,3 +9,7 @@
 .cluster-info-header .stats {
     text-transform: uppercase;
 }
+
+.cluster.inactive {
+    color:#efefef;
+}

@@ -20,6 +20,9 @@ function getTaskArnsForCluster(cluster) {
 
 function describeTasksFn(cluster) {
     return (listTasksResponse) => {
+        if (listTasksResponse.taskArns.length === 0) {
+            return Promise.resolve({ tasks: [] });
+        }
         const params = { 
             cluster: cluster,
             tasks: listTasksResponse.taskArns
