@@ -9,9 +9,12 @@ const _containerInstancesStreamCache = {};
 
 
 function getContainerInstanceArns(cluster) {
+    const params = {
+        cluster: cluster
+    };
     return awsRequest.create((awsConfig) => {
         const ecs = new AWS.ECS(awsConfig);
-        return ecs.listContainerInstances().promise();
+        return ecs.listContainerInstances(params).promise();
     });
 }
 
