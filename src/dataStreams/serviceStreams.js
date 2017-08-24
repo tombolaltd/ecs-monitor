@@ -9,11 +9,26 @@ import { chunk, flatten } from '../utils/array';
 const _serviceStreamCache = {};
 
 function getServiceArns(clusterArn) {
-    const params = { cluster: clusterArn };
-    return awsRequest.create(awsConfig => {
-        const ecs = new AWS.ECS(awsConfig);
-        return ecs.listServices(params).promise();
-    });
+    const loop = (nextToken, accumulator) => {
+        return awsRequest.create(awsConfig => {
+            const params = {
+                cluster: clusterArn,
+                nextToken: nextToken
+            };
+            const ecs = new AWS.ECS(awsConfig);
+            return ecs.listServices(params).promise()
+                .then((response) => {
+                    accumulator.push(...response.serviceArns);
+                    if (!response.nextToken) {
+                        return accumulator;
+                    }
+
+                    return loop(response.nextToken, accumulator);
+                });
+        });
+    }
+        
+    return loop(null, []);
 }
 
 function getDescribedServices(serviceArns, clusterNameOrArn) {
@@ -36,7 +51,7 @@ export const serviceArnStream$ =
     // run a get service request and project the result into an object containing the clusterArn string and the resulting arns.
     const serviceArnsRequestObservables$ = clusterArnResponse.clusterArns.map(
             clusterArn =>
-                Observable.forkJoin(getServiceArns(clusterArn), (resp) => ({ clusterArn, serviceArns: resp.serviceArns })));
+                Observable.forkJoin(getServiceArns(clusterArn), (resp) => ({ clusterArn, serviceArns: resp })));
         
     // after all observables emit... Emit.
     return Observable.zip(...serviceArnsRequestObservables$);

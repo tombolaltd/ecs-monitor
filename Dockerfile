@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:7.7.1
+FROM mhart/alpine-node:8.4
 
 COPY package.json /tmp/package.json
 COPY server/package.json /tmp/server/package.json
