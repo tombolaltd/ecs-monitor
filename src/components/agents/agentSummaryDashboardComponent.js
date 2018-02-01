@@ -37,6 +37,10 @@ function assignColoursToTaskDefinitions(arns) {
     return taskDefColourCache;
 }
 
+function byHighestTaskCountDesc(clusterA, clusterB) {
+    return clusterA.runningTasksCount < clusterB.runningTasksCount;
+}
+
 class ClusterDashboard extends Component {
     constructor(props) {
         super(props);
@@ -48,8 +52,9 @@ class ClusterDashboard extends Component {
     }
 
     updateClusterState(newState) {
+        const clusters = newState.sort(byHighestTaskCountDesc);
         this.setState({
-            clusters: newState,
+            clusters: clusters,
             lastUpdateStamp: stamp()
         })
     }
@@ -63,6 +68,7 @@ class ClusterDashboard extends Component {
 
     componentWillUnmount() {
         this.taskDefinitionObserver.unsubscribe();
+        this.clusterObserver.unsubscribe();
     }
 
     renderClusterAgentBreakdown(cluster) {
