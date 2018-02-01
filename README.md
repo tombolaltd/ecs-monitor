@@ -6,9 +6,18 @@ As well as aggregation, ECS monitor also offers various features over and above 
 
 <img src="https://cdn.worldvectorlogo.com/logos/react.svg" height="50" title="react" alt="react" /><img src="https://avatars3.githubusercontent.com/u/984368?v=3&s=100" height="50" title="rxjs" alt="rxjs" /><img src="https://camo.githubusercontent.com/a6ee039214392d86e038c5d601f55ec60310d03c/68747470733a2f2f63646e2e7261776769742e636f6d2f7072706c782f7376672d6c6f676f732f6d61737465722f7376672f6d6174657269616c697a652e737667" height="47" title="materializecss" alt="materializecss" />
 
+## Screenshots
 
+<img src="/screenshots/services.png" alt="Demo services dashboard" />
+<img src="/screenshots/agents.png" alt="Demo agents dashboard" />
 
-## build
+----
+
+<img src="/screenshots/clusters.png" height="100" /><img src="/screenshots/events.png" height="100" /><img src="/screenshots/cluster-load.gif" height="100" /><img src="/screenshots/services-load.gif" height="100" />
+
+[All screenshots...](/screenshots)
+
+## Build
 
 #### development
 
