@@ -37,6 +37,10 @@
     vertical-align: middle;
 }
 
+.agent-info .agent-icon {
+    cursor:pointer;
+}
+
 .agent .task-count {
     display: block;
     margin: 0.25em 0;

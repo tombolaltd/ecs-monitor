@@ -17,7 +17,8 @@
     "react-addons-css-transition-group": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.2",
-    "rxjs": "^5.2.0"
+    "rxjs": "^5.2.0",
+    "tippy.js": "^2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
