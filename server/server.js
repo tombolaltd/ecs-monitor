@@ -13,12 +13,13 @@ if (env === 'development') {
     devCredentials = require('../devCredentials.json');
 }
 
+const AWS_REGION = process.env.AWS_REGION || devCredentials.AWS_REGION;
 const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || devCredentials.DEVELOPMENT_AWS_ACCESS_KEY;
 const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY || devCredentials.DEVELOPMENT_AWS_SECRET_KEY;
 
 
 const sts = new AWS.STS({
-    region: 'eu-west-1',
+    region: AWS_REGION,
     accessKeyId: AWS_ACCESS_KEY_ID,
     secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
@@ -26,7 +27,13 @@ const sts = new AWS.STS({
 sub.use(express.static(rootPath));
 
 sub.post('/authenticate', (req, res) => {
-    return sts.getSessionToken().promise().then(res.json.bind(res));
+    return sts.getSessionToken().promise()
+        .then((tokenResponse) => {
+            res.json({
+                aws_region: AWS_REGION,
+                credentials: tokenResponse.Credentials
+            });
+        });
 });
 
 sub.get('/ping', (req, res) => {

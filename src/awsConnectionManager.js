@@ -27,15 +27,15 @@ export default {
             const sessionAuthEntry = window.sessionStorage.getItem(SESSIONSTORAGE_AUTH_KEY);
 
             if (sessionAuthEntry) {
-                const parsedAuthEntry = JSON.parse(sessionAuthEntry);
-                const expiration = moment(parsedAuthEntry.Credentials.Expiration);
+                const parsedSessionEntry = JSON.parse(sessionAuthEntry);
+                const expiration = moment(parsedSessionEntry.credentials.Expiration);
                 const now = moment();
 
                 // check expiry, if it's past, get fresh credentials.
                 if (now.isSameOrAfter(expiration)) {
                     window.sessionStorage.removeItem(SESSIONSTORAGE_AUTH_KEY);
                 } else {
-                    return res(parsedAuthEntry);
+                    return res(parsedSessionEntry);
                 }
             }
 

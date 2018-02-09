@@ -1,12 +1,10 @@
 import AWS from 'aws-sdk';
 import awsConnectionManager from './awsConnectionManager';
 
-
-const AWS_REGION = 'eu-west-1';
-
 const devCredentials = process.env.NODE_ENV === 'development'
     ? require('../devCredentials.json')
     : void 0;
+
 
 function refreshCredentials(awsCredentialsObject) {
     return (cb) => {
@@ -36,19 +34,19 @@ function updateCredentials(awsCredentialsObject, cb) {
 function getAwsConfig() {
     return new Promise((resolve, reject) => {
         if (process.env.NODE_ENV === 'production') {
-            return awsConnectionManager.getAuthenticationDetails().then((auth) => {
+            return awsConnectionManager.getAuthenticationDetails().then((awsDetails) => {
                 const credentials = new AWS.Credentials({
-                    accessKeyId: auth.Credentials.AccessKeyId,
-                    secretAccessKey: auth.Credentials.SecretAccessKey,
-                    sessionToken: auth.Credentials.SessionToken,
-                    expireTime: new Date(auth.Credentials.Expiration)
+                    accessKeyId: awsDetails.credentials.AccessKeyId,
+                    secretAccessKey: awsDetails.credentials.SecretAccessKey,
+                    sessionToken: awsDetails.credentials.SessionToken,
+                    expireTime: new Date(awsDetails.credentials.Expiration)
                 });
                 
                 // override the refresh function to run our own logic.
                 credentials.refresh = refreshCredentials(credentials);
                 
                 return resolve(new AWS.Config({
-                    region: AWS_REGION,
+                    region: awsDetails.aws_region,
                     credentials: credentials,
                     httpOptions: {
                         timeout: 5000 // milliseconds
@@ -64,7 +62,7 @@ function getAwsConfig() {
         }
 
         return resolve(new AWS.Config({
-            region: AWS_REGION,
+            region: devCredentials.AWS_REGION,
             credentials: {
                 accessKeyId: devCredentials.DEVELOPMENT_AWS_ACCESS_KEY,
                 secretAccessKey: devCredentials.DEVELOPMENT_AWS_SECRET_KEY

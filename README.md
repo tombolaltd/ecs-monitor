@@ -22,10 +22,11 @@ As well as aggregation, ECS monitor also offers various features over and above 
 #### development
 
 To run the app in development, first you need to create a file in the app root directory called devCredentials.json. This is to supply the app with aws credentials. The file won't be source controlled.
-It's a single object with 2 properties:
+It's a single object with 3 properties:
 
 ```
 {
+    "AWS_REGION: "e.g. eu-west-1",
     "DEVELOPMENT_AWS_ACCESS_KEY": "...",
     "DEVELOPMENT_AWS_SECRET_KEY": "..."
 }
@@ -49,10 +50,11 @@ Will compile a production ready build of the client side application.
 Will run the server.
 
 When running a production build, we stop looking for local developer credentials and instead request temporary credentials from the server (/authenticate). The server sends a request to AWS STS (Security Token Service) to retrieve temporary identity.
-In order for the server to do this you need to set **2 environment variables:**
+In order for the server to do this you need to set **3 environment variables:**
 
-1. AWS_ACCESS_KEY_ID
-2. AWS_SECRET_ACCESS_KEY
+1. AWS_REGION 
+2. AWS_ACCESS_KEY_ID
+3. AWS_SECRET_ACCESS_KEY
 
 
 #### docker
@@ -60,6 +62,7 @@ In order for the server to do this you need to set **2 environment variables:**
 ```
 $ docker build -t ecs-monitor {checkout_dir}
 $ docker run -p 1337:1337 --rm \
+    -e AWS_REGION=... \
     -e AWS_ACCESS_KEY_ID=... \
     -e AWS_SECRET_ACCESS_KEY=... \
     ecs-monitor

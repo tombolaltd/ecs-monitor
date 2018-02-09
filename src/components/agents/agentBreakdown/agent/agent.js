@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { nameFromAwsArn } from '../../../../utils/stringFormatting';
-import { getEc2InstanceDetails } from '../../../../dataRequests/ec2Requests';
 import Tooltip from '../../../tooltip/tooltip';
-import tippy from 'tippy.js';
 import './agent.css';
 
 
