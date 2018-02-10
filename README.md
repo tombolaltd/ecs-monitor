@@ -56,6 +56,10 @@ In order for the server to do this you need to set **3 environment variables:**
 2. AWS_ACCESS_KEY_ID
 3. AWS_SECRET_ACCESS_KEY
 
+##### IAM policy
+
+The recommended IAM policy to run the monitor under can be found [here (/aws/policy.json)](/aws/policy.json)
+
 
 #### docker
 
