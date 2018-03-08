@@ -16,7 +16,7 @@ function stringToColour(str) {
     for (let i = 0; i < str.length; i++) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-    
+
     let colour = '#';
     for (let i = 0; i < 3; i++) {
         const value = (hash >> (i * 8)) & 0xFF;
@@ -26,14 +26,14 @@ function stringToColour(str) {
 }
 
 function assignColoursToTaskDefinitions(arns) {
-    for (let i=0; i < arns.length; i++) {
+    for (let i = 0; i < arns.length; i++) {
         const arn = arns[i];
         if (taskDefColourCache[arn]) {
             continue;
         }
         taskDefColourCache[arn] = stringToColour(arn);
     }
-    
+
     return taskDefColourCache;
 }
 
@@ -44,7 +44,7 @@ function byHighestTaskCountDesc(clusterA, clusterB) {
 class ClusterDashboard extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             lastUpdateStamp: stamp(),
             clusters: []
         };
@@ -60,9 +60,9 @@ class ClusterDashboard extends Component {
     }
 
     componentWillMount() {
-        this.taskDefinitionObserver = 
+        this.taskDefinitionObserver =
             taskDefinitionStream$.subscribe(assignColoursToTaskDefinitions);
-        
+
         this.clusterObserver = clusterStream$.subscribe(this.updateClusterState);
     }
 
@@ -75,7 +75,7 @@ class ClusterDashboard extends Component {
         return (
             <ClusterAgentBreakdown
                 key={`breakdown::${cluster.clusterName}`}
-                clusterName={cluster.clusterName} 
+                clusterName={cluster.clusterName}
                 agentCount={cluster.registeredContainerInstancesCount}
                 runningTasksCount={cluster.runningTasksCount + cluster.pendingTasksCount}
                 taskDefinitionColours={taskDefColourCache} />
@@ -85,9 +85,9 @@ class ClusterDashboard extends Component {
     render() {
         const clusterBreakdownComponents = this.state.clusters.map(this.renderClusterAgentBreakdown);
         return (
-            <div className="ec2-summary">
+            <div className={`ec2-summary count-${this.state.clusters.length}`}>
                 <PageDescription header={`${this.state.clusters.length} monitored clusters`} lastUpdateStamp={this.state.lastUpdateStamp} />
-                
+
                 {clusterBreakdownComponents}
             </div>
         );

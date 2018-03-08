@@ -36,7 +36,7 @@ class ClusterAgentBreakdown extends Component {
         this.updateState = this.updateState.bind(this);
         this.renderAgentComponent = this.renderAgentComponent.bind(this);
     }
-    
+
     updateState(newState) {
         this.setState({
             data: newState
@@ -44,7 +44,7 @@ class ClusterAgentBreakdown extends Component {
     }
 
     taskCount(data) {
-        if (data.length === 0) 
+        if (data.length === 0)
             return 0;
 
         return data.reduce((acc, next) => acc + next.tasks.length, 0);
@@ -65,10 +65,10 @@ class ClusterAgentBreakdown extends Component {
     componentWillUnmount() {
         this.tasksDataObservable.unsubscribe();
     }
-    
+
     renderAgentComponent(entry) {
         return (
-            <Agent 
+            <Agent
                 agentDetails={entry}
                 key={entry.instance.ec2InstanceId}
                 taskDefinitionColours={this.props.taskDefinitionColours} />
@@ -76,12 +76,12 @@ class ClusterAgentBreakdown extends Component {
     }
 
     render() {
-        const activeClass = this.props.runningTasksCount < 1 
+        const activeClass = this.props.runningTasksCount < 1
             ? 'inactive'
-            : '';
+            : 'active';
         const agents = this.state.data.map(this.renderAgentComponent);
         return (
-            <div className={`cluster ${activeClass}`}>
+            <div className={`cluster ${activeClass} count-${this.state.data.length}`}>
                 <div className="cluster-info-header">
                     <h3 className="header">{this.props.clusterName} cluster</h3>
                     <strong className="stats">

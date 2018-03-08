@@ -20,29 +20,29 @@ function mapToClusterName(cluster) {
 }
 
 function mapClusterToMetrics(cluster, i) {
-        const clusterName = cluster.clusterName;
-        const dimensions = [
-            { Name: 'ClusterName', Value: clusterName}
-        ];
-        const cpuDataStream$ = metricsStream$(dimensions, "CPUUtilization");
-        const memoryDataStream$ = metricsStream$(dimensions, "MemoryUtilization");
-        return (
-            <li key={clusterName + '-graphMetric' + i} style={inlineBlock}>
-                <Graph memoryStream={memoryDataStream$} cpuStream={cpuDataStream$} label={clusterName}/>
-            </li>
-        );
+    const clusterName = cluster.clusterName;
+    const dimensions = [
+        { Name: 'ClusterName', Value: clusterName }
+    ];
+    const cpuDataStream$ = metricsStream$(dimensions, "CPUUtilization");
+    const memoryDataStream$ = metricsStream$(dimensions, "MemoryUtilization");
+    return (
+        <li key={clusterName + '-graphMetric' + i} style={inlineBlock}>
+            <Graph memoryStream={memoryDataStream$} cpuStream={cpuDataStream$} label={clusterName} />
+        </li>
+    );
 }
 
 class ClusterDashboard extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             clusters: [],
             clusterCount: 0,
             lastUpdateStamp: stamp()
         };
     }
-    
+
     updateClusterState(clusters) {
         if (!clusters || clusters.length === 0) {
             return;
@@ -66,10 +66,12 @@ class ClusterDashboard extends Component {
         const clusterNames = this.state.clusters.map(mapToClusterName);
         const graphBody = this.state.clusters.map(mapClusterToMetrics, this);
         return (
-            <div className="cluster-summary">
+            <div className={`cluster-summary count-${this.state.clusters.length}`}>
                 <PageDescription header={`${this.state.clusterCount} monitored clusters`} lastUpdateStamp={this.state.lastUpdateStamp} />
                 <div className="row">
-                    <div className="col s6"><ClusterSummary /></div>
+                    <div className="col s6">
+                        <ClusterSummary />
+                    </div>
                     <div className="col s6">
                         <MetricStatGroup clusters={clusterNames} />
                     </div>

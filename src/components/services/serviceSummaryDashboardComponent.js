@@ -14,17 +14,17 @@ function stamp() {
 class ServiceSummaryDashboard extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             activeServiceCount: 0,
             lastUpdateStamp: stamp()
         };
     }
 
     updateState(services) {
-        if(!services || services.length === 0) {
+        if (!services || services.length === 0) {
             return;
         }
-        this.setState({ 
+        this.setState({
             activeServiceCount: services.length,
             lastUpdateStamp: stamp()
         });
@@ -37,10 +37,10 @@ class ServiceSummaryDashboard extends Component {
     componentWillUnmount() {
         this.servicesStreamObserver.unsubscribe();
     }
-    
+
     render() {
         return (
-            <div className="service-summary">
+            <div className={`service-summary count-${this.state.activeServiceCount}`}>
                 <PageDescription header={`${this.state.activeServiceCount} monitored services`} lastUpdateStamp={this.state.lastUpdateStamp} />
                 <div className="row">
                     <div className="col s5"><ServiceTaskOverview /></div>
