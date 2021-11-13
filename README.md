@@ -26,7 +26,7 @@ It's a single object with 3 properties:
 
 ```
 {
-    "AWS_REGION: "e.g. eu-west-1",
+    "AWS_REGION": "e.g. eu-west-1",
     "DEVELOPMENT_AWS_ACCESS_KEY": "...",
     "DEVELOPMENT_AWS_SECRET_KEY": "..."
 }
